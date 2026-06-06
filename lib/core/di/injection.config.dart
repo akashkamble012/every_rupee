@@ -150,6 +150,9 @@ extension GetItInjectableX on _i1.GetIt {
           gh<_i4.TransactionRepository>(),
           gh<_i24.GetWealthHistoryUseCase>(),
           gh<_i4.AuthRepository>(),
+          gh<_i4.BudgetCategoryRepository>(),
+          gh<_i4.IncomeRepository>(),
+          gh<_i4.RoadmapRepository>(),
         ));
     return this;
   }

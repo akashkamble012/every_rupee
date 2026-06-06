@@ -26,6 +26,10 @@ class IncomeLocalDataSource {
             .toList());
   }
 
+  Stream<void> watchAll() {
+    return _db.db.isarIncomeSources.watchLazy(fireImmediately: true);
+  }
+
   Future<Result<List<IncomeSourceEntity>>> getAll() async {
     try {
       final all = await _db.db.isarIncomeSources
@@ -120,6 +124,9 @@ class IncomeRepositoryImpl implements IncomeRepository {
   @override
   Stream<List<IncomeSourceEntity>> watchActiveSources(DateTime month) =>
       _local.watchActive(month);
+
+  @override
+  Stream<void> watchAllSources() => _local.watchAll();
 
   @override
   Future<Result<List<IncomeSourceEntity>>> getAllSources() => _local.getAll();

@@ -44,6 +44,9 @@ class RoadmapRepositoryImpl implements RoadmapRepository {
   }
 
   @override
+  Stream<void> watchAllRoadmapData() => _local.watchAll();
+
+  @override
   Future<Result<TemporaryOutflowEntity>> saveTemporaryOutflow(TemporaryOutflowEntity outflow) async {
     try {
       final isarOutflow = IsarTemporaryOutflow()

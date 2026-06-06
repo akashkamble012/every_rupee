@@ -74,6 +74,9 @@ abstract interface class TransactionRepository {
   /// Stream all non-deleted transactions for the given [month].
   Stream<List<TransactionEntity>> watchTransactionsByMonth(DateTime month);
 
+  /// Fires whenever any transaction changes.
+  Stream<void> watchAllTransactions();
+
   /// Paginated fetch for the ledger screen.
   Future<Result<List<TransactionEntity>>> getTransactionsPaged({
     required int offset,
@@ -107,6 +110,8 @@ abstract interface class BudgetCategoryRepository {
   /// Stream active categories for the given [month].
   Stream<List<BudgetCategoryEntity>> watchActiveCategories(DateTime month);
 
+  Stream<void> watchAllCategories();
+
   Future<Result<List<BudgetCategoryEntity>>> getAllCategories();
 
   Future<Result<BudgetCategoryEntity>> saveCategory(BudgetCategoryEntity cat);
@@ -120,6 +125,8 @@ abstract interface class BudgetCategoryRepository {
 
 abstract interface class IncomeRepository {
   Stream<List<IncomeSourceEntity>> watchActiveSources(DateTime month);
+
+  Stream<void> watchAllSources();
 
   Future<Result<List<IncomeSourceEntity>>> getAllSources();
 
@@ -135,6 +142,8 @@ abstract interface class IncomeRepository {
 abstract interface class RoadmapRepository {
   /// Stream temporary outflows (EMIs, debts, etc)
   Stream<List<TemporaryOutflowEntity>> watchTemporaryOutflows();
+
+  Stream<void> watchAllRoadmapData();
 
   /// Watch specific month overrides and action plan
   Stream<RoadmapMonthEntity?> watchRoadmapMonth(String id);

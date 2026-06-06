@@ -27,6 +27,10 @@ class BudgetCategoryLocalDataSource {
             .toList());
   }
 
+  Stream<void> watchAll() {
+    return _db.db.isarBudgetCategorys.watchLazy(fireImmediately: true);
+  }
+
   Future<Result<List<BudgetCategoryEntity>>> getAll() async {
     try {
       final all = await _db.db.isarBudgetCategorys
@@ -127,6 +131,9 @@ class BudgetCategoryRepositoryImpl implements BudgetCategoryRepository {
   @override
   Stream<List<BudgetCategoryEntity>> watchActiveCategories(DateTime month) =>
       _local.watchActive(month);
+
+  @override
+  Stream<void> watchAllCategories() => _local.watchAll();
 
   @override
   Future<Result<List<BudgetCategoryEntity>>> getAllCategories() =>

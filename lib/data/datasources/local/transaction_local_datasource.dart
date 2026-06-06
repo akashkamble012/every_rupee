@@ -30,6 +30,10 @@ class TransactionLocalDataSource {
         .map((list) => list.map(_toEntity).toList());
   }
 
+  Stream<void> watchAll() {
+    return _db.db.isarTransactions.watchLazy(fireImmediately: true);
+  }
+
   // ── Paginated fetch ───────────────────────────────────────────────────────
 
   Future<Result<List<TransactionEntity>>> getPaged({

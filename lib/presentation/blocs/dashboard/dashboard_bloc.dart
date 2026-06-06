@@ -54,11 +54,17 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   final TransactionRepository _txRepo;
   final GetWealthHistoryUseCase _wealthHistoryUseCase;
   final AuthRepository _authRepo;
+  final BudgetCategoryRepository _categoryRepo;
+  final IncomeRepository _incomeRepo;
+  final RoadmapRepository _roadmapRepo;
 
   DateTime _currentMonth = DateTime(
       DateTime.now().year, DateTime.now().month, 1);
 
-  StreamSubscription<List<TransactionEntity>>? _txSub;
+  StreamSubscription<void>? _txSub;
+  StreamSubscription<void>? _catSub;
+  StreamSubscription<void>? _incSub;
+  StreamSubscription<void>? _rdmSub;
 
   DashboardBloc(
     this._surplusUseCase,
@@ -66,6 +72,9 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     this._txRepo,
     this._wealthHistoryUseCase,
     this._authRepo,
+    this._categoryRepo,
+    this._incomeRepo,
+    this._roadmapRepo,
   ) : super(const DashboardState.initial()) {
     on<_Load>(_onLoad);
     on<_PreviousMonth>(_onPrev);
@@ -85,13 +94,28 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     
     await _loadData(emit);
     
-    // Watch for live transaction updates
+    // Watch for live updates
     if (isNewMonth) {
       _txSub?.cancel();
-      _txSub = _txRepo.watchTransactionsByMonth(_currentMonth).listen(
-        (_) => add(DashboardEvent.load(_currentMonth)),
-      );
+      _catSub?.cancel();
+      _incSub?.cancel();
+      _rdmSub?.cancel();
+
+      void reload(_) => add(DashboardEvent.load(_currentMonth));
+      _txSub = _txRepo.watchAllTransactions().listen(reload);
+      _catSub = _categoryRepo.watchAllCategories().listen(reload);
+      _incSub = _incomeRepo.watchAllSources().listen(reload);
+      _rdmSub = _roadmapRepo.watchAllRoadmapData().listen(reload);
     }
+  }
+
+  @override
+  Future<void> close() {
+    _txSub?.cancel();
+    _catSub?.cancel();
+    _incSub?.cancel();
+    _rdmSub?.cancel();
+    return super.close();
   }
 
   Future<void> _onPrev(
@@ -243,9 +267,5 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     return copy;
   }
 
-  @override
-  Future<void> close() {
-    _txSub?.cancel();
-    return super.close();
-  }
+  
 }

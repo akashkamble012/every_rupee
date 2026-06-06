@@ -27,6 +27,10 @@ class RoadmapLocalDataSource {
         .map((list) => list.firstOrNull);
   }
 
+  Stream<void> watchAll() {
+    return _db.isarTemporaryOutflows.watchLazy(fireImmediately: true);
+  }
+
   Future<void> saveTemporaryOutflow(IsarTemporaryOutflow outflow) async {
     await _db.writeTxn(() async {
       await _db.isarTemporaryOutflows.put(outflow);

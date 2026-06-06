@@ -15,6 +15,9 @@ class TransactionRepositoryImpl implements TransactionRepository {
       _local.watchByMonth(month);
 
   @override
+  Stream<void> watchAllTransactions() => _local.watchAll();
+
+  @override
   Future<Result<List<TransactionEntity>>> getTransactionsPaged({
     required int offset,
     required int limit,

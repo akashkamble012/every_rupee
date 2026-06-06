@@ -1,3 +1,4 @@
+  import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -53,12 +54,23 @@ class LedgerBloc extends Bloc<LedgerEvent, LedgerState> {
   String? _categoryId;
   TransactionType? _type;
   String? _searchText;
+  StreamSubscription<void>? _txSub;
 
   LedgerBloc(this._txRepo) : super(const LedgerState.initial()) {
     on<_Load>(_onLoad);
     on<_LoadMore>(_onLoadMore);
     on<_ApplyFilter>(_onApplyFilter);
     on<_SoftDelete>(_onSoftDelete);
+    
+    _txSub = _txRepo.watchAllTransactions().listen((_) {
+      add(const LedgerEvent.load());
+    });
+  }
+
+  @override
+  Future<void> close() {
+    _txSub?.cancel();
+    return super.close();
   }
 
   Future<void> _onLoad(_Load event, Emitter<LedgerState> emit) async {
