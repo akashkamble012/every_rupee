@@ -364,7 +364,7 @@ class _TransactionFormScreenState extends State<TransactionFormScreen> {
                 return ChoiceChip(
                   label: Text(mode.name.toUpperCase()),
                   selected: selected,
-                  selectedColor: AppDesign.primary.withOpacity(0.2),
+                  selectedColor: AppDesign.primary.withValues(alpha: 0.2),
                   backgroundColor: AppDesign.surfaceHigh,
                   labelStyle: AppDesign.labelLarge.copyWith(
                     color: selected ? AppDesign.primary : AppDesign.subtle,
@@ -427,7 +427,7 @@ class _TypeButton extends StatelessWidget {
           margin: const EdgeInsets.all(4),
           padding: const EdgeInsets.symmetric(vertical: 8),
           decoration: BoxDecoration(
-            color: isSelected ? color.withOpacity(0.15) : Colors.transparent,
+            color: isSelected ? color.withValues(alpha: 0.15) : Colors.transparent,
             borderRadius: AppDesign.roundMedium,
           ),
           child: Row(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:local_auth/local_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../core/di/injection.dart';
 import '../../../core/theme/app_design.dart';
@@ -18,7 +19,8 @@ class AppLockGuard extends StatefulWidget {
 class _AppLockGuardState extends State<AppLockGuard> {
   bool _isUnlocked = false;
   bool _isAuthenticating = false;
-  bool _wasUnauthenticated = false;
+  bool _isPromptingAppLock = false;
+  String? _uidForPrompt;
 
   @override
   void initState() {
@@ -28,18 +30,21 @@ class _AppLockGuardState extends State<AppLockGuard> {
 
   Future<void> _checkLock() async {
     final state = context.read<AuthBloc>().state;
-    final user = state.whenOrNull(authenticated: (u) => u);
     
-    if (user != null && user.isAppLockEnabled) {
-      _authenticate();
-    } else {
-      if (state.maybeWhen(unauthenticated: () => true, orElse: () => false)) {
-        _wasUnauthenticated = true;
-      }
-      setState(() {
-        _isUnlocked = true;
-      });
-    }
+    state.whenOrNull(
+      authenticated: (u) {
+        if (u.isAppLockEnabled) {
+          _authenticate();
+        } else {
+          _promptEnableAppLock(u.uid);
+        }
+      },
+      unauthenticated: () {
+        setState(() {
+          _isUnlocked = true;
+        });
+      },
+    );
   }
 
   Future<void> _authenticate() async {
@@ -49,6 +54,10 @@ class _AppLockGuardState extends State<AppLockGuard> {
     });
 
     try {
+      // Wait briefly for the UI to fully attach before launching the system dialog.
+      // Calling this too early during app launch can cause the plugin to hang indefinitely on Android.
+      await Future.delayed(const Duration(milliseconds: 300));
+
       final localAuth = getIt<LocalAuthentication>();
       final canAuthenticate = await localAuth.canCheckBiometrics || await localAuth.isDeviceSupported();
       
@@ -93,40 +102,32 @@ class _AppLockGuardState extends State<AppLockGuard> {
       return;
     }
 
-    final shouldEnable = await showDialog<bool>(
-      context: context,
-      barrierDismissible: false,
-      builder: (ctx) => AlertDialog(
-        backgroundColor: AppDesign.surface,
-        title: Text('Enable App Lock?', style: AppDesign.headlineMedium),
-        content: Text('Would you like to use fingerprint or face unlock to secure your Every Rupee data?', style: AppDesign.bodyMedium),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx, false),
-            child: const Text('Not Now', style: TextStyle(color: AppDesign.subtle)),
-          ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(backgroundColor: AppDesign.primary),
-            onPressed: () => Navigator.pop(ctx, true),
-            child: const Text('Enable'),
-          ),
-        ],
-      ),
-    );
+    // Force show the prompt UI instead of using showDialog (which lacks a Navigator here)
+    setState(() {
+      _isPromptingAppLock = true;
+      _uidForPrompt = uid;
+    });
+  }
 
-    if (shouldEnable == true) {
+  Future<void> _handlePromptDecision(bool enable) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('hasPromptedAppLock', true);
+
+    if (enable && _uidForPrompt != null) {
+      final localAuth = getIt<LocalAuthentication>();
       final didAuthenticate = await localAuth.authenticate(
         localizedReason: 'Please authenticate to enable App Lock',
         biometricOnly: false,
       );
       if (didAuthenticate) {
         final repo = getIt<AuthRepository>();
-        await repo.updateAppLockStatus(uid, true);
+        await repo.updateAppLockStatus(_uidForPrompt!, true);
       }
     }
 
     if (mounted) {
       setState(() {
+        _isPromptingAppLock = false;
         _isUnlocked = true;
       });
     }
@@ -136,29 +137,21 @@ class _AppLockGuardState extends State<AppLockGuard> {
   Widget build(BuildContext context) {
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
-        state.maybeWhen(
+        state.whenOrNull(
           unauthenticated: () {
-            _wasUnauthenticated = true;
             setState(() {
               _isUnlocked = true;
             });
           },
           authenticated: (u) {
-            if (u.isAppLockEnabled && !_isUnlocked) {
-              _authenticate();
-            } else if (!u.isAppLockEnabled) {
-              if (_wasUnauthenticated) {
-                _wasUnauthenticated = false;
-                _promptEnableAppLock(u.uid);
-              } else {
-                setState(() {
-                  _isUnlocked = true;
-                });
+            if (u.isAppLockEnabled) {
+              if (!_isUnlocked) {
+                _authenticate();
               }
+            } else {
+              _promptEnableAppLock(u.uid);
             }
-            _wasUnauthenticated = false;
           },
-          orElse: () {},
         );
       },
       child: _isUnlocked 
@@ -166,23 +159,57 @@ class _AppLockGuardState extends State<AppLockGuard> {
         : Scaffold(
             backgroundColor: AppDesign.background,
             body: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(Icons.lock_rounded, size: 64, color: AppDesign.primary),
-                  const SizedBox(height: AppDesign.s24),
-                  Text('App Locked', style: AppDesign.headlineMedium),
-                  const SizedBox(height: AppDesign.s32),
-                  if (!_isAuthenticating)
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(backgroundColor: AppDesign.primary),
-                      onPressed: _authenticate,
-                      child: const Text('Unlock'),
-                    )
-                  else
-                    const CircularProgressIndicator(color: AppDesign.primary),
-                ],
-              ),
+              child: _isPromptingAppLock
+                ? Padding(
+                    padding: const EdgeInsets.all(AppDesign.s24),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.fingerprint, size: 64, color: AppDesign.primary),
+                        const SizedBox(height: AppDesign.s24),
+                        Text('Enable App Lock?', style: AppDesign.headlineMedium),
+                        const SizedBox(height: AppDesign.s16),
+                        Text(
+                          'Would you like to use fingerprint or face unlock to secure your Every Rupee data?',
+                          style: AppDesign.bodyMedium,
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: AppDesign.s32),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            TextButton(
+                              onPressed: () => _handlePromptDecision(false),
+                              child: const Text('Not Now', style: TextStyle(color: AppDesign.subtle)),
+                            ),
+                            const SizedBox(width: AppDesign.s16),
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(backgroundColor: AppDesign.primary),
+                              onPressed: () => _handlePromptDecision(true),
+                              child: const Text('Enable'),
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                  )
+                : Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.lock_rounded, size: 64, color: AppDesign.primary),
+                      const SizedBox(height: AppDesign.s24),
+                      Text('App Locked', style: AppDesign.headlineMedium),
+                      const SizedBox(height: AppDesign.s32),
+                      if (!_isAuthenticating)
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(backgroundColor: AppDesign.primary),
+                          onPressed: _authenticate,
+                          child: const Text('Unlock'),
+                        )
+                      else
+                        const CircularProgressIndicator(color: AppDesign.primary),
+                    ],
+                  ),
             ),
           ),
     );

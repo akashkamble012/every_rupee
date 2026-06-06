@@ -256,7 +256,7 @@ class _TransactionList extends StatelessWidget {
               padding:
                   const EdgeInsets.only(right: AppDesign.s20),
               decoration: BoxDecoration(
-                color: AppDesign.error.withOpacity(0.15),
+                color: AppDesign.error.withValues(alpha: 0.15),
                 borderRadius: AppDesign.roundMedium,
               ),
               child: const Icon(Icons.delete_outline_rounded,
@@ -329,7 +329,7 @@ class _LedgerTile extends StatelessWidget {
             decoration: BoxDecoration(
               color:
                   (isDebit ? AppDesign.debit : AppDesign.credit)
-                      .withOpacity(0.12),
+                      .withValues(alpha: 0.12),
               shape: BoxShape.circle,
             ),
             child: Icon(
@@ -370,7 +370,7 @@ class _LedgerTile extends StatelessWidget {
                     children: tx.tags.map((tag) => Container(
                       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                       decoration: BoxDecoration(
-                        color: AppDesign.primary.withOpacity(0.1),
+                        color: AppDesign.primary.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(4),
                       ),
                       child: Text(tag, style: AppDesign.labelLarge.copyWith(color: AppDesign.primary, fontSize: 10)),
@@ -404,38 +404,38 @@ class _LedgerTile extends StatelessWidget {
   }
 }
 
-class _FilterSheet extends StatelessWidget {
-  const _FilterSheet();
+// class _FilterSheet extends StatelessWidget {
+//   const _FilterSheet();
 
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(AppDesign.s24),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('Filter Transactions',
-              style: AppDesign.headlineMedium),
-          const SizedBox(height: AppDesign.s24),
-          Text('Advanced filters — Date range, Category, Type, Search',
-              style: AppDesign.bodySmall),
-          const SizedBox(height: AppDesign.s8),
-          Text(
-            'Filter UI implementation goes here (date pickers, category dropdown, debit/credit toggle, text search).',
-            style: AppDesign.bodyMedium,
-          ),
-          const SizedBox(height: AppDesign.s24),
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Apply'),
-            ),
-          ),
-          const SizedBox(height: AppDesign.s16),
-        ],
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return Padding(
+//       padding: const EdgeInsets.all(AppDesign.s24),
+//       child: Column(
+//         mainAxisSize: MainAxisSize.min,
+//         crossAxisAlignment: CrossAxisAlignment.start,
+//         children: [
+//           Text('Filter Transactions',
+//               style: AppDesign.headlineMedium),
+//           const SizedBox(height: AppDesign.s24),
+//           Text('Advanced filters — Date range, Category, Type, Search',
+//               style: AppDesign.bodySmall),
+//           const SizedBox(height: AppDesign.s8),
+//           Text(
+//             'Filter UI implementation goes here (date pickers, category dropdown, debit/credit toggle, text search).',
+//             style: AppDesign.bodyMedium,
+//           ),
+//           const SizedBox(height: AppDesign.s24),
+//           SizedBox(
+//             width: double.infinity,
+//             child: ElevatedButton(
+//               onPressed: () => Navigator.pop(context),
+//               child: const Text('Apply'),
+//             ),
+//           ),
+//           const SizedBox(height: AppDesign.s16),
+//         ],
+//       ),
+//     );
+//   }
+// }

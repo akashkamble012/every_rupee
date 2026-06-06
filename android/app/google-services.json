@@ -14,6 +14,22 @@
       },
       "oauth_client": [
         {
+          "client_id": "711111911218-agduuov41rp06mdopr7epb6h9jfnl978.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.everyrupee.app",
+            "certificate_hash": "618d0a65c8ec17f9c6d7ace627676a0518211321"
+          }
+        },
+        {
+          "client_id": "711111911218-b48u3e15ab73ht8iuc7efqj56jhabojq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.everyrupee.app",
+            "certificate_hash": "96a47acadb001dd2292ed96dcc424f678767e82f"
+          }
+        },
+        {
           "client_id": "711111911218-alabvfj4a3v9tstb524sn6gkc0e0fl0s.apps.googleusercontent.com",
           "client_type": 3
         }

@@ -200,7 +200,7 @@ class _CategoryList extends StatelessWidget {
             borderRadius: AppDesign.roundMedium,
             border: isExpiring
                 ? Border.all(
-                    color: AppDesign.warning.withOpacity(0.3), width: 1)
+                    color: AppDesign.warning.withValues(alpha: 0.3), width: 1)
                 : null,
           ),
           child: ListTile(
@@ -210,7 +210,7 @@ class _CategoryList extends StatelessWidget {
               width: 40,
               height: 40,
               decoration: BoxDecoration(
-                color: AppDesign.primary.withOpacity(0.12),
+                color: AppDesign.primary.withValues(alpha: 0.12),
                 borderRadius: AppDesign.roundSmall,
               ),
               child: Icon(
@@ -310,7 +310,7 @@ class _IncomeList extends StatelessWidget {
               width: 40,
               height: 40,
               decoration: BoxDecoration(
-                color: AppDesign.credit.withOpacity(0.12),
+                color: AppDesign.credit.withValues(alpha: 0.12),
                 borderRadius: AppDesign.roundSmall,
               ),
               child: const Icon(Icons.account_balance_rounded,

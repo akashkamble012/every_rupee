@@ -51,7 +51,6 @@ class MonthNavigator extends StatelessWidget {
                 GestureDetector(
                   onTap: () {
                     // Jump to current month
-                    final now = DateTime.now();
                     if (!isCurrentMonth) {
                       onNext(); // simplified; real impl would navigate directly
                     }
@@ -62,12 +61,12 @@ class MonthNavigator extends StatelessWidget {
                         vertical: AppDesign.s4),
                     decoration: BoxDecoration(
                       color: isCurrentMonth
-                          ? AppDesign.primary.withOpacity(0.12)
+                          ? AppDesign.primary.withValues(alpha: 0.12)
                           : AppDesign.surfaceHigh,
                       borderRadius: BorderRadius.circular(20),
                       border: isCurrentMonth
                           ? Border.all(
-                              color: AppDesign.primary.withOpacity(0.3),
+                              color: AppDesign.primary.withValues(alpha: 0.3),
                               width: 1)
                           : null,
                     ),

@@ -169,14 +169,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               await repo.updateAppLockStatus(user.uid, val);
                             }
                           } else {
-                            if (mounted) {
+                            if (context.mounted) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(content: Text('Device does not support biometrics/lock.'), backgroundColor: AppDesign.error),
                               );
                             }
                           }
                         } catch (e) {
-                           if (mounted) {
+                           if (context.mounted) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(content: Text('Authentication failed: $e'), backgroundColor: AppDesign.error),
                               );

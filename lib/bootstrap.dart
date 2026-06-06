@@ -49,13 +49,16 @@ class EveryRupeeApp extends StatelessWidget {
       child: Builder(
         builder: (context) {
           final router = getIt<AppRouter>().router;
-          return AppLockGuard(
-            child: MaterialApp.router(
-              title: 'Every Rupee',
-              debugShowCheckedModeBanner: false,
-              theme: AppDesign.darkTheme,
-              routerConfig: router,
-            ),
+          return MaterialApp.router(
+            title: 'Every Rupee',
+            debugShowCheckedModeBanner: false,
+            theme: AppDesign.darkTheme,
+            routerConfig: router,
+            builder: (context, child) {
+              return AppLockGuard(
+                child: child ?? const SizedBox.shrink(),
+              );
+            },
           );
         },
       ),

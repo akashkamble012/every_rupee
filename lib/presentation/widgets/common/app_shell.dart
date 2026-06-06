@@ -65,7 +65,7 @@ class _AppBottomNav extends StatelessWidget {
           onDestinationSelected: onTap,
           labelBehavior:
               NavigationDestinationLabelBehavior.onlyShowSelected,
-          indicatorColor: AppDesign.primary.withOpacity(0.15),
+          indicatorColor: AppDesign.primary.withValues(alpha: 0.15),
           destinations: const [
             NavigationDestination(
               icon: Icon(Icons.dashboard_outlined),

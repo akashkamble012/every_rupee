@@ -90,9 +90,11 @@ class _BudgetSetupScreenState extends State<BudgetSetupScreen> {
         lastModifiedAt: now,
       ));
     }
-
+    
+    if(!context.mounted) return;
     // Mark budget setup complete
     context.read<AuthBloc>().add(const AuthEvent.markBudgetSetupComplete());
+  
   }
 
   void _showError(String msg) {
@@ -252,7 +254,7 @@ class _StickyTracker extends StatelessWidget {
       padding: const EdgeInsets.symmetric(
           horizontal: AppDesign.s16, vertical: AppDesign.s12),
       decoration: BoxDecoration(
-        color: isOver ? AppDesign.error.withOpacity(0.15) : AppDesign.surface,
+        color: isOver ? AppDesign.error.withValues(alpha: 0.15) : AppDesign.surface,
         border: Border(
             bottom: BorderSide(
           color: isOver ? AppDesign.error : AppDesign.divider,

@@ -298,7 +298,7 @@ class _DateButton extends StatelessWidget {
           borderRadius: AppDesign.roundMedium,
           border: Border.all(
             color: date != null
-                ? AppDesign.primary.withOpacity(0.5)
+                ? AppDesign.primary.withValues(alpha: 0.5)
                 : Colors.transparent,
           ),
         ),
@@ -347,7 +347,7 @@ class _TypeChip extends StatelessWidget {
         padding: const EdgeInsets.symmetric(
             horizontal: AppDesign.s12, vertical: AppDesign.s8),
         decoration: BoxDecoration(
-          color: selected ? color.withOpacity(0.15) : AppDesign.surface,
+          color: selected ? color.withValues(alpha: 0.15) : AppDesign.surface,
           borderRadius: AppDesign.roundMedium,
           border: Border.all(
               color: selected ? color : Colors.transparent),

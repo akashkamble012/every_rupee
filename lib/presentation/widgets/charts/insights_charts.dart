@@ -90,7 +90,7 @@ class WealthTrendChart extends StatelessWidget {
               dotData: const FlDotData(show: true),
               belowBarData: BarAreaData(
                 show: true,
-                color: AppDesign.primary.withOpacity(0.15),
+                color: AppDesign.primary.withValues(alpha: 0.15),
               ),
             ),
           ],
@@ -271,7 +271,7 @@ class DailySpendChart extends StatelessWidget {
               barRods: [
                 BarChartRodData(
                   toY: dailyTotals[index],
-                  color: AppDesign.primary.withOpacity(0.8),
+                  color: AppDesign.primary.withValues(alpha: 0.8),
                   width: 4,
                   borderRadius: const BorderRadius.vertical(top: Radius.circular(2)),
                 ),
@@ -409,7 +409,7 @@ class CategorySpendingChart extends StatelessWidget {
       const Color(0xFFFFC107),
       const Color(0xFF00BCD4),
     ];
-    final othersColor = AppDesign.subtle.withOpacity(0.3);
+    final othersColor = AppDesign.subtle.withValues(alpha: 0.3);
 
     return AspectRatio(
       aspectRatio: 1.5,

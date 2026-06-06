@@ -327,7 +327,7 @@ class OverviewRecentTxTile extends StatelessWidget {
             width: 36,
             height: 36,
             decoration: BoxDecoration(
-              color: (isDebit ? AppDesign.debit : AppDesign.credit).withOpacity(0.12),
+              color: (isDebit ? AppDesign.debit : AppDesign.credit).withValues(alpha: 0.12),
               shape: BoxShape.circle,
             ),
             child: Icon(
@@ -371,9 +371,9 @@ class OverviewPendingReviewBanner extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: AppDesign.s16, vertical: AppDesign.s12),
       decoration: BoxDecoration(
-        color: AppDesign.warning.withOpacity(0.1),
+        color: AppDesign.warning.withValues(alpha: 0.1),
         borderRadius: AppDesign.roundMedium,
-        border: Border.all(color: AppDesign.warning.withOpacity(0.5)),
+        border: Border.all(color: AppDesign.warning.withValues(alpha: 0.5)),
       ),
       child: Row(
         children: [
@@ -511,7 +511,7 @@ class MonthlyActionPlanCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppDesign.surfaceHigh,
         borderRadius: AppDesign.roundLarge,
-        border: Border.all(color: AppDesign.primary.withOpacity(0.3)),
+        border: Border.all(color: AppDesign.primary.withValues(alpha: 0.3)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

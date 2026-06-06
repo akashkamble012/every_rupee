@@ -126,6 +126,7 @@ class ExportLedgerUseCase {
       }
 
       // 4. Share
+      // ignore: deprecated_member_use
       await Share.shareXFiles([XFile(file.path)], text: 'My Ledger Export');
     
       return const Ok(null);

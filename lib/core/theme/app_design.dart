@@ -74,7 +74,7 @@ abstract class AppDesign {
   // ── Elevation shadows ────────────────────────────────────────────────────
   static List<BoxShadow> get shadowCard => [
         BoxShadow(
-          color: Colors.black.withOpacity(0.45),
+          color: Colors.black.withValues(alpha: 0.45),
           blurRadius: 16,
           offset: const Offset(0, 4),
         ),
@@ -82,7 +82,7 @@ abstract class AppDesign {
 
   static List<BoxShadow> get shadowGlow => [
         BoxShadow(
-          color: primary.withOpacity(0.25),
+          color: primary.withValues(alpha: 0.25),
           blurRadius: 24,
           spreadRadius: 0,
         ),

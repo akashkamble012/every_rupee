@@ -271,7 +271,7 @@ class _AllocationDonut extends StatelessWidget {
       final color = _chartColors[index % _chartColors.length];
       return PieChartSectionData(
         value: v.spent > 0 ? v.spent : v.category.cap * 0.01,
-        color: color.withOpacity(0.85),
+        color: color.withValues(alpha: 0.85),
         radius: 40,
         title: '',
       );

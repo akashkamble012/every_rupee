@@ -63,6 +63,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '711111911218',
     projectId: 'every-rupee',
     storageBucket: 'every-rupee.firebasestorage.app',
+    androidClientId: '711111911218-agduuov41rp06mdopr7epb6h9jfnl978.apps.googleusercontent.com',
     iosClientId: '711111911218-50k55i8j9nc6psijouf5c4ufiv61u00t.apps.googleusercontent.com',
     iosBundleId: 'com.everyrupee.app',
   );
