@@ -24,6 +24,8 @@ class TransactionEntity with _$TransactionEntity {
     String? note,
     String? smsSource,          // populated when parsed from SMS
     @Default(false) bool needsReview, // true if auto-captured and unverified
+    @Default(false) bool isRecurring,
+    @Default([]) List<String> tags,
     @Default(false) bool isDeleted,
     required DateTime createdAt,
     required DateTime lastModifiedAt,
@@ -114,6 +116,7 @@ class UserEntity with _$UserEntity {
     @Default(false) bool budgetSetupComplete,
     String? varianceSortPreference,
     List<String>? dashboardVisibleCharts,
+    @Default(false) bool isAppLockEnabled,
   }) = _UserEntity;
 }
 

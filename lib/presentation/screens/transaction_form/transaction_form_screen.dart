@@ -30,6 +30,9 @@ class _TransactionFormScreenState extends State<TransactionFormScreen> {
   DateTime _date = DateTime.now();
   bool _saving = false;
   String? _smsSource;
+  bool _isRecurring = false;
+  List<String> _tags = [];
+  final _tagsCtrl = TextEditingController();
 
   List<BudgetCategoryEntity> _categories = [];
   List<BudgetCategoryEntity> _allCategories = [];
@@ -74,6 +77,11 @@ class _TransactionFormScreenState extends State<TransactionFormScreen> {
         }
         _date = tx.date;
         _smsSource = tx.smsSource;
+        _isRecurring = tx.isRecurring;
+        _tags = List.from(tx.tags);
+        if (_tags.isNotEmpty) {
+          _tagsCtrl.text = _tags.join(', ');
+        }
       });
     }
   }
@@ -119,6 +127,10 @@ class _TransactionFormScreenState extends State<TransactionFormScreen> {
       note: _noteCtrl.text.trim().isEmpty ? null : _noteCtrl.text.trim(),
       smsSource: _smsSource,
       needsReview: false, // Always mark as reviewed when saved manually
+      isRecurring: _isRecurring,
+      tags: _tagsCtrl.text.trim().isEmpty
+          ? []
+          : _tagsCtrl.text.split(',').map((e) => e.trim()).where((e) => e.isNotEmpty).toList(),
       createdAt: now,
       lastModifiedAt: now,
     );
@@ -180,6 +192,7 @@ class _TransactionFormScreenState extends State<TransactionFormScreen> {
     _amountCtrl.dispose();
     _merchantCtrl.dispose();
     _noteCtrl.dispose();
+    _tagsCtrl.dispose();
     super.dispose();
   }
 
@@ -316,6 +329,28 @@ class _TransactionFormScreenState extends State<TransactionFormScreen> {
               style:
                   AppDesign.bodyMedium.copyWith(color: AppDesign.onBackground),
               decoration: const InputDecoration(hintText: 'Merchant / Note'),
+            ),
+            const SizedBox(height: AppDesign.s16),
+
+            // ── Tags ───────────────────────────────────────────────────
+            TextField(
+              controller: _tagsCtrl,
+              style: AppDesign.bodyMedium.copyWith(color: AppDesign.onBackground),
+              decoration: const InputDecoration(
+                hintText: 'Tags (comma separated e.g. trip, food)',
+                prefixIcon: Icon(Icons.tag_rounded, color: AppDesign.subtle, size: 20),
+              ),
+            ),
+            const SizedBox(height: AppDesign.s16),
+
+            // ── Recurring ──────────────────────────────────────────────
+            SwitchListTile(
+              contentPadding: EdgeInsets.zero,
+              title: Text('Recurring Transaction', style: AppDesign.titleMedium),
+              subtitle: Text('e.g., Loan EMI, subscriptions', style: AppDesign.bodySmall.copyWith(color: AppDesign.subtle)),
+              value: _isRecurring,
+              activeColor: AppDesign.primary,
+              onChanged: (val) => setState(() => _isRecurring = val),
             ),
             const SizedBox(height: AppDesign.s16),
 

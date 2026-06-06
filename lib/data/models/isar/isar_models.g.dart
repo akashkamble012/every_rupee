@@ -47,38 +47,48 @@ const IsarTransactionSchema = CollectionSchema(
       name: r'isDeleted',
       type: IsarType.bool,
     ),
-    r'lastModifiedAt': PropertySchema(
+    r'isRecurring': PropertySchema(
       id: 6,
+      name: r'isRecurring',
+      type: IsarType.bool,
+    ),
+    r'lastModifiedAt': PropertySchema(
+      id: 7,
       name: r'lastModifiedAt',
       type: IsarType.dateTime,
     ),
     r'merchant': PropertySchema(
-      id: 7,
+      id: 8,
       name: r'merchant',
       type: IsarType.string,
     ),
     r'needsReview': PropertySchema(
-      id: 8,
+      id: 9,
       name: r'needsReview',
       type: IsarType.bool,
     ),
     r'note': PropertySchema(
-      id: 9,
+      id: 10,
       name: r'note',
       type: IsarType.string,
     ),
     r'paymentModeIndex': PropertySchema(
-      id: 10,
+      id: 11,
       name: r'paymentModeIndex',
       type: IsarType.long,
     ),
     r'smsSource': PropertySchema(
-      id: 11,
+      id: 12,
       name: r'smsSource',
       type: IsarType.string,
     ),
+    r'tags': PropertySchema(
+      id: 13,
+      name: r'tags',
+      type: IsarType.stringList,
+    ),
     r'typeIndex': PropertySchema(
-      id: 12,
+      id: 14,
       name: r'typeIndex',
       type: IsarType.long,
     )
@@ -154,6 +164,19 @@ const IsarTransactionSchema = CollectionSchema(
         )
       ],
     ),
+    r'isRecurring': IndexSchema(
+      id: 1211429805563284888,
+      name: r'isRecurring',
+      unique: false,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'isRecurring',
+          type: IndexType.value,
+          caseSensitive: false,
+        )
+      ],
+    ),
     r'isDeleted': IndexSchema(
       id: -786475870904832312,
       name: r'isDeleted',
@@ -202,6 +225,13 @@ int _isarTransactionEstimateSize(
       bytesCount += 3 + value.length * 3;
     }
   }
+  bytesCount += 3 + object.tags.length * 3;
+  {
+    for (var i = 0; i < object.tags.length; i++) {
+      final value = object.tags[i];
+      bytesCount += value.length * 3;
+    }
+  }
   return bytesCount;
 }
 
@@ -217,13 +247,15 @@ void _isarTransactionSerialize(
   writer.writeDateTime(offsets[3], object.date);
   writer.writeString(offsets[4], object.id);
   writer.writeBool(offsets[5], object.isDeleted);
-  writer.writeDateTime(offsets[6], object.lastModifiedAt);
-  writer.writeString(offsets[7], object.merchant);
-  writer.writeBool(offsets[8], object.needsReview);
-  writer.writeString(offsets[9], object.note);
-  writer.writeLong(offsets[10], object.paymentModeIndex);
-  writer.writeString(offsets[11], object.smsSource);
-  writer.writeLong(offsets[12], object.typeIndex);
+  writer.writeBool(offsets[6], object.isRecurring);
+  writer.writeDateTime(offsets[7], object.lastModifiedAt);
+  writer.writeString(offsets[8], object.merchant);
+  writer.writeBool(offsets[9], object.needsReview);
+  writer.writeString(offsets[10], object.note);
+  writer.writeLong(offsets[11], object.paymentModeIndex);
+  writer.writeString(offsets[12], object.smsSource);
+  writer.writeStringList(offsets[13], object.tags);
+  writer.writeLong(offsets[14], object.typeIndex);
 }
 
 IsarTransaction _isarTransactionDeserialize(
@@ -239,13 +271,15 @@ IsarTransaction _isarTransactionDeserialize(
   object.date = reader.readDateTime(offsets[3]);
   object.id = reader.readString(offsets[4]);
   object.isDeleted = reader.readBool(offsets[5]);
-  object.lastModifiedAt = reader.readDateTime(offsets[6]);
-  object.merchant = reader.readStringOrNull(offsets[7]);
-  object.needsReview = reader.readBool(offsets[8]);
-  object.note = reader.readStringOrNull(offsets[9]);
-  object.paymentModeIndex = reader.readLongOrNull(offsets[10]);
-  object.smsSource = reader.readStringOrNull(offsets[11]);
-  object.typeIndex = reader.readLong(offsets[12]);
+  object.isRecurring = reader.readBool(offsets[6]);
+  object.lastModifiedAt = reader.readDateTime(offsets[7]);
+  object.merchant = reader.readStringOrNull(offsets[8]);
+  object.needsReview = reader.readBool(offsets[9]);
+  object.note = reader.readStringOrNull(offsets[10]);
+  object.paymentModeIndex = reader.readLongOrNull(offsets[11]);
+  object.smsSource = reader.readStringOrNull(offsets[12]);
+  object.tags = reader.readStringList(offsets[13]) ?? [];
+  object.typeIndex = reader.readLong(offsets[14]);
   return object;
 }
 
@@ -269,18 +303,22 @@ P _isarTransactionDeserializeProp<P>(
     case 5:
       return (reader.readBool(offset)) as P;
     case 6:
-      return (reader.readDateTime(offset)) as P;
-    case 7:
-      return (reader.readStringOrNull(offset)) as P;
-    case 8:
       return (reader.readBool(offset)) as P;
+    case 7:
+      return (reader.readDateTime(offset)) as P;
+    case 8:
+      return (reader.readStringOrNull(offset)) as P;
     case 9:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readBool(offset)) as P;
     case 10:
-      return (reader.readLongOrNull(offset)) as P;
-    case 11:
       return (reader.readStringOrNull(offset)) as P;
+    case 11:
+      return (reader.readLongOrNull(offset)) as P;
     case 12:
+      return (reader.readStringOrNull(offset)) as P;
+    case 13:
+      return (reader.readStringList(offset) ?? []) as P;
+    case 14:
       return (reader.readLong(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -381,6 +419,14 @@ extension IsarTransactionQueryWhereSort
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
         const IndexWhereClause.any(indexName: r'needsReview'),
+      );
+    });
+  }
+
+  QueryBuilder<IsarTransaction, IsarTransaction, QAfterWhere> anyIsRecurring() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(
+        const IndexWhereClause.any(indexName: r'isRecurring'),
       );
     });
   }
@@ -778,6 +824,51 @@ extension IsarTransactionQueryWhere
               indexName: r'needsReview',
               lower: [],
               upper: [needsReview],
+              includeUpper: false,
+            ));
+      }
+    });
+  }
+
+  QueryBuilder<IsarTransaction, IsarTransaction, QAfterWhereClause>
+      isRecurringEqualTo(bool isRecurring) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'isRecurring',
+        value: [isRecurring],
+      ));
+    });
+  }
+
+  QueryBuilder<IsarTransaction, IsarTransaction, QAfterWhereClause>
+      isRecurringNotEqualTo(bool isRecurring) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'isRecurring',
+              lower: [],
+              upper: [isRecurring],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'isRecurring',
+              lower: [isRecurring],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'isRecurring',
+              lower: [isRecurring],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'isRecurring',
+              lower: [],
+              upper: [isRecurring],
               includeUpper: false,
             ));
       }
@@ -1287,6 +1378,16 @@ extension IsarTransactionQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'isDeleted',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<IsarTransaction, IsarTransaction, QAfterFilterCondition>
+      isRecurringEqualTo(bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'isRecurring',
         value: value,
       ));
     });
@@ -1951,6 +2052,231 @@ extension IsarTransactionQueryFilter
   }
 
   QueryBuilder<IsarTransaction, IsarTransaction, QAfterFilterCondition>
+      tagsElementEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'tags',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<IsarTransaction, IsarTransaction, QAfterFilterCondition>
+      tagsElementGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'tags',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<IsarTransaction, IsarTransaction, QAfterFilterCondition>
+      tagsElementLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'tags',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<IsarTransaction, IsarTransaction, QAfterFilterCondition>
+      tagsElementBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'tags',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<IsarTransaction, IsarTransaction, QAfterFilterCondition>
+      tagsElementStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'tags',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<IsarTransaction, IsarTransaction, QAfterFilterCondition>
+      tagsElementEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'tags',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<IsarTransaction, IsarTransaction, QAfterFilterCondition>
+      tagsElementContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'tags',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<IsarTransaction, IsarTransaction, QAfterFilterCondition>
+      tagsElementMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'tags',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<IsarTransaction, IsarTransaction, QAfterFilterCondition>
+      tagsElementIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'tags',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<IsarTransaction, IsarTransaction, QAfterFilterCondition>
+      tagsElementIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'tags',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<IsarTransaction, IsarTransaction, QAfterFilterCondition>
+      tagsLengthEqualTo(int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'tags',
+        length,
+        true,
+        length,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<IsarTransaction, IsarTransaction, QAfterFilterCondition>
+      tagsIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'tags',
+        0,
+        true,
+        0,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<IsarTransaction, IsarTransaction, QAfterFilterCondition>
+      tagsIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'tags',
+        0,
+        false,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<IsarTransaction, IsarTransaction, QAfterFilterCondition>
+      tagsLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'tags',
+        0,
+        true,
+        length,
+        include,
+      );
+    });
+  }
+
+  QueryBuilder<IsarTransaction, IsarTransaction, QAfterFilterCondition>
+      tagsLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'tags',
+        length,
+        include,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<IsarTransaction, IsarTransaction, QAfterFilterCondition>
+      tagsLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'tags',
+        lower,
+        includeLower,
+        upper,
+        includeUpper,
+      );
+    });
+  }
+
+  QueryBuilder<IsarTransaction, IsarTransaction, QAfterFilterCondition>
       typeIndexEqualTo(int value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -2092,6 +2418,20 @@ extension IsarTransactionQuerySortBy
       sortByIsDeletedDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isDeleted', Sort.desc);
+    });
+  }
+
+  QueryBuilder<IsarTransaction, IsarTransaction, QAfterSortBy>
+      sortByIsRecurring() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isRecurring', Sort.asc);
+    });
+  }
+
+  QueryBuilder<IsarTransaction, IsarTransaction, QAfterSortBy>
+      sortByIsRecurringDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isRecurring', Sort.desc);
     });
   }
 
@@ -2275,6 +2615,20 @@ extension IsarTransactionQuerySortThenBy
     });
   }
 
+  QueryBuilder<IsarTransaction, IsarTransaction, QAfterSortBy>
+      thenByIsRecurring() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isRecurring', Sort.asc);
+    });
+  }
+
+  QueryBuilder<IsarTransaction, IsarTransaction, QAfterSortBy>
+      thenByIsRecurringDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isRecurring', Sort.desc);
+    });
+  }
+
   QueryBuilder<IsarTransaction, IsarTransaction, QAfterSortBy> thenByIsarId() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isarId', Sort.asc);
@@ -2429,6 +2783,13 @@ extension IsarTransactionQueryWhereDistinct
   }
 
   QueryBuilder<IsarTransaction, IsarTransaction, QDistinct>
+      distinctByIsRecurring() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'isRecurring');
+    });
+  }
+
+  QueryBuilder<IsarTransaction, IsarTransaction, QDistinct>
       distinctByLastModifiedAt() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'lastModifiedAt');
@@ -2467,6 +2828,12 @@ extension IsarTransactionQueryWhereDistinct
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'smsSource', caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<IsarTransaction, IsarTransaction, QDistinct> distinctByTags() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'tags');
     });
   }
 
@@ -2523,6 +2890,12 @@ extension IsarTransactionQueryProperty
     });
   }
 
+  QueryBuilder<IsarTransaction, bool, QQueryOperations> isRecurringProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'isRecurring');
+    });
+  }
+
   QueryBuilder<IsarTransaction, DateTime, QQueryOperations>
       lastModifiedAtProperty() {
     return QueryBuilder.apply(this, (query) {
@@ -2558,6 +2931,12 @@ extension IsarTransactionQueryProperty
   QueryBuilder<IsarTransaction, String?, QQueryOperations> smsSourceProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'smsSource');
+    });
+  }
+
+  QueryBuilder<IsarTransaction, List<String>, QQueryOperations> tagsProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'tags');
     });
   }
 

@@ -110,6 +110,7 @@ class AuthRemoteDataSource {
         'budgetSetupComplete': false,
         'varianceSortPreference': null,
         'dashboardVisibleCharts': ['wealth_trend', 'allocation_donut', 'daily_spend', 'income_expense', 'category_breakdown'],
+        'isAppLockEnabled': false,
         'createdAt': FieldValue.serverTimestamp(),
       };
       await ref.set(data);
@@ -131,6 +132,7 @@ class AuthRemoteDataSource {
       varianceSortPreference: d['varianceSortPreference'] as String?,
       dashboardVisibleCharts: (d['dashboardVisibleCharts'] as List<dynamic>?)?.map((e) => e as String).toList() 
           ?? ['wealth_trend', 'allocation_donut', 'daily_spend', 'income_expense', 'category_breakdown'],
+      isAppLockEnabled: d['isAppLockEnabled'] as bool? ?? false,
     );
   }
 
@@ -165,6 +167,23 @@ class AuthRemoteDataSource {
     } catch (e) {
       return Err(AppError.auth(
           message: 'Failed to mark budget setup complete', original: e));
+    }
+  }
+
+  Future<Result<void>> updateAppLockStatus(String uid, bool isEnabled) async {
+    try {
+      await _db
+          .collection('users')
+          .doc(uid)
+          .update({'isAppLockEnabled': isEnabled});
+      final current = _userSubject.value;
+      if (current != null && current.uid == uid) {
+        _userSubject.add(current.copyWith(isAppLockEnabled: isEnabled));
+      }
+      return const Ok(null);
+    } catch (e) {
+      return Err(AppError.auth(
+          message: 'Failed to update app lock status', original: e));
     }
   }
 

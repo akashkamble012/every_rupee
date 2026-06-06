@@ -61,6 +61,10 @@ dependencies:
   collection: ^1.18.0
   shared_preferences: ^2.3.1
   talker: 5.1.17
+  share_plus: ^13.1.0
+  local_auth: ^3.0.1
+  excel: ^4.0.6
+  pdf: ^3.12.0
 
 dev_dependencies:
   flutter_test:

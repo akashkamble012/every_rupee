@@ -61,6 +61,8 @@ abstract interface class AuthRepository {
 
   Future<Result<void>> updateDashboardVisibleCharts(String uid, List<String> charts);
 
+  Future<Result<void>> updateAppLockStatus(String uid, bool isEnabled);
+
   UserEntity? get currentUser;
 }
 

@@ -5,7 +5,9 @@ import '../../../core/di/injection.dart';
 import '../../../core/error/app_error.dart';
 import '../../../core/theme/app_design.dart';
 import '../../../domain/repositories/repositories.dart';
+import '../../../domain/usecases/export/export_ledger_usecase.dart';
 import '../../blocs/auth/auth_bloc.dart';
+import 'package:local_auth/local_auth.dart' as local_auth;
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -40,6 +42,65 @@ class _SettingsScreenState extends State<SettingsScreen> {
     }
   }
 
+  void _showExportOptions() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: AppDesign.surface,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(AppDesign.radiusMedium)),
+      ),
+      builder: (context) {
+        return SafeArea(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(AppDesign.s16),
+                child: Text('Select Export Format', style: AppDesign.headlineMedium),
+              ),
+              ListTile(
+                leading: const Icon(Icons.table_chart_outlined, color: AppDesign.primary),
+                title: const Text('CSV (Spreadsheet)'),
+                onTap: () {
+                  Navigator.pop(context);
+                  _exportLedger(ExportFormat.csv);
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.grid_on_outlined, color: AppDesign.success),
+                title: const Text('Excel (.xlsx)'),
+                onTap: () {
+                  Navigator.pop(context);
+                  _exportLedger(ExportFormat.excel);
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.picture_as_pdf_outlined, color: AppDesign.error),
+                title: const Text('PDF Document'),
+                onTap: () {
+                  Navigator.pop(context);
+                  _exportLedger(ExportFormat.pdf);
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> _exportLedger(ExportFormat format) async {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Generating ${format.name.toUpperCase()} export...')),
+    );
+    final result = await getIt<ExportLedgerUseCase>().call(format);
+    if (result.isErr && mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed: ${result.error.displayMessage}'), backgroundColor: AppDesign.error),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,6 +118,51 @@ class _SettingsScreenState extends State<SettingsScreen> {
           return ListView(
             padding: const EdgeInsets.all(AppDesign.s16),
             children: [
+              _Section(title: 'Security', children: [
+                BlocBuilder<AuthBloc, AuthState>(
+                  builder: (context, state) {
+                    final user = state.whenOrNull(authenticated: (u) => u);
+                    if (user == null) return const SizedBox();
+
+                    return SwitchListTile(
+                      title: Text('App Lock', style: AppDesign.bodyMedium.copyWith(color: AppDesign.onSurface)),
+                      subtitle: Text('Require biometric authentication to open', style: AppDesign.bodySmall),
+                      value: user.isAppLockEnabled,
+                      activeColor: AppDesign.primary,
+                      onChanged: (val) async {
+                        try {
+                          final localAuth = getIt<local_auth.LocalAuthentication>();
+                          final canAuthenticate = await localAuth.canCheckBiometrics || await localAuth.isDeviceSupported();
+                          
+                          if (canAuthenticate) {
+                            final didAuthenticate = await localAuth.authenticate(
+                              localizedReason: 'Please authenticate to toggle App Lock',
+                              biometricOnly: false,
+                            );
+                            
+                            if (didAuthenticate) {
+                              final repo = getIt<AuthRepository>();
+                              await repo.updateAppLockStatus(user.uid, val);
+                            }
+                          } else {
+                            if (mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text('Device does not support biometrics/lock.'), backgroundColor: AppDesign.error),
+                              );
+                            }
+                          }
+                        } catch (e) {
+                           if (mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text('Authentication failed: $e'), backgroundColor: AppDesign.error),
+                              );
+                            }
+                        }
+                      },
+                    );
+                  },
+                ),
+              ]),
               _Section(title: 'Account', children: [
                 _SettingsTile(
                   icon: Icons.logout_rounded,
@@ -77,6 +183,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   icon: Icons.download_rounded,
                   label: 'Force Pull from Firebase',
                   onTap: isSyncing ? null : () => _handleSync(true),
+                ),
+                _SettingsTile(
+                  icon: Icons.file_download_outlined,
+                  label: 'Export Ledger',
+                  onTap: _showExportOptions,
                 ),
               ]),
               _Section(title: 'About', children: [

@@ -28,6 +28,8 @@ mixin _$TransactionEntity {
       throw _privateConstructorUsedError; // populated when parsed from SMS
   bool get needsReview =>
       throw _privateConstructorUsedError; // true if auto-captured and unverified
+  bool get isRecurring => throw _privateConstructorUsedError;
+  List<String> get tags => throw _privateConstructorUsedError;
   bool get isDeleted => throw _privateConstructorUsedError;
   DateTime get createdAt => throw _privateConstructorUsedError;
   DateTime get lastModifiedAt => throw _privateConstructorUsedError;
@@ -54,6 +56,8 @@ abstract class $TransactionEntityCopyWith<$Res> {
       String? note,
       String? smsSource,
       bool needsReview,
+      bool isRecurring,
+      List<String> tags,
       bool isDeleted,
       DateTime createdAt,
       DateTime lastModifiedAt});
@@ -82,6 +86,8 @@ class _$TransactionEntityCopyWithImpl<$Res, $Val extends TransactionEntity>
     Object? note = freezed,
     Object? smsSource = freezed,
     Object? needsReview = null,
+    Object? isRecurring = null,
+    Object? tags = null,
     Object? isDeleted = null,
     Object? createdAt = null,
     Object? lastModifiedAt = null,
@@ -127,6 +133,14 @@ class _$TransactionEntityCopyWithImpl<$Res, $Val extends TransactionEntity>
           ? _value.needsReview
           : needsReview // ignore: cast_nullable_to_non_nullable
               as bool,
+      isRecurring: null == isRecurring
+          ? _value.isRecurring
+          : isRecurring // ignore: cast_nullable_to_non_nullable
+              as bool,
+      tags: null == tags
+          ? _value.tags
+          : tags // ignore: cast_nullable_to_non_nullable
+              as List<String>,
       isDeleted: null == isDeleted
           ? _value.isDeleted
           : isDeleted // ignore: cast_nullable_to_non_nullable
@@ -162,6 +176,8 @@ abstract class _$$TransactionEntityImplCopyWith<$Res>
       String? note,
       String? smsSource,
       bool needsReview,
+      bool isRecurring,
+      List<String> tags,
       bool isDeleted,
       DateTime createdAt,
       DateTime lastModifiedAt});
@@ -188,6 +204,8 @@ class __$$TransactionEntityImplCopyWithImpl<$Res>
     Object? note = freezed,
     Object? smsSource = freezed,
     Object? needsReview = null,
+    Object? isRecurring = null,
+    Object? tags = null,
     Object? isDeleted = null,
     Object? createdAt = null,
     Object? lastModifiedAt = null,
@@ -233,6 +251,14 @@ class __$$TransactionEntityImplCopyWithImpl<$Res>
           ? _value.needsReview
           : needsReview // ignore: cast_nullable_to_non_nullable
               as bool,
+      isRecurring: null == isRecurring
+          ? _value.isRecurring
+          : isRecurring // ignore: cast_nullable_to_non_nullable
+              as bool,
+      tags: null == tags
+          ? _value._tags
+          : tags // ignore: cast_nullable_to_non_nullable
+              as List<String>,
       isDeleted: null == isDeleted
           ? _value.isDeleted
           : isDeleted // ignore: cast_nullable_to_non_nullable
@@ -263,9 +289,12 @@ class _$TransactionEntityImpl implements _TransactionEntity {
       this.note,
       this.smsSource,
       this.needsReview = false,
+      this.isRecurring = false,
+      final List<String> tags = const [],
       this.isDeleted = false,
       required this.createdAt,
-      required this.lastModifiedAt});
+      required this.lastModifiedAt})
+      : _tags = tags;
 
   @override
   final String id;
@@ -292,6 +321,18 @@ class _$TransactionEntityImpl implements _TransactionEntity {
 // true if auto-captured and unverified
   @override
   @JsonKey()
+  final bool isRecurring;
+  final List<String> _tags;
+  @override
+  @JsonKey()
+  List<String> get tags {
+    if (_tags is EqualUnmodifiableListView) return _tags;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_tags);
+  }
+
+  @override
+  @JsonKey()
   final bool isDeleted;
   @override
   final DateTime createdAt;
@@ -300,7 +341,7 @@ class _$TransactionEntityImpl implements _TransactionEntity {
 
   @override
   String toString() {
-    return 'TransactionEntity(id: $id, amount: $amount, type: $type, date: $date, categoryId: $categoryId, merchant: $merchant, paymentMode: $paymentMode, note: $note, smsSource: $smsSource, needsReview: $needsReview, isDeleted: $isDeleted, createdAt: $createdAt, lastModifiedAt: $lastModifiedAt)';
+    return 'TransactionEntity(id: $id, amount: $amount, type: $type, date: $date, categoryId: $categoryId, merchant: $merchant, paymentMode: $paymentMode, note: $note, smsSource: $smsSource, needsReview: $needsReview, isRecurring: $isRecurring, tags: $tags, isDeleted: $isDeleted, createdAt: $createdAt, lastModifiedAt: $lastModifiedAt)';
   }
 
   @override
@@ -323,6 +364,9 @@ class _$TransactionEntityImpl implements _TransactionEntity {
                 other.smsSource == smsSource) &&
             (identical(other.needsReview, needsReview) ||
                 other.needsReview == needsReview) &&
+            (identical(other.isRecurring, isRecurring) ||
+                other.isRecurring == isRecurring) &&
+            const DeepCollectionEquality().equals(other._tags, _tags) &&
             (identical(other.isDeleted, isDeleted) ||
                 other.isDeleted == isDeleted) &&
             (identical(other.createdAt, createdAt) ||
@@ -344,6 +388,8 @@ class _$TransactionEntityImpl implements _TransactionEntity {
       note,
       smsSource,
       needsReview,
+      isRecurring,
+      const DeepCollectionEquality().hash(_tags),
       isDeleted,
       createdAt,
       lastModifiedAt);
@@ -368,6 +414,8 @@ abstract class _TransactionEntity implements TransactionEntity {
       final String? note,
       final String? smsSource,
       final bool needsReview,
+      final bool isRecurring,
+      final List<String> tags,
       final bool isDeleted,
       required final DateTime createdAt,
       required final DateTime lastModifiedAt}) = _$TransactionEntityImpl;
@@ -393,6 +441,10 @@ abstract class _TransactionEntity implements TransactionEntity {
   @override // populated when parsed from SMS
   bool get needsReview;
   @override // true if auto-captured and unverified
+  bool get isRecurring;
+  @override
+  List<String> get tags;
+  @override
   bool get isDeleted;
   @override
   DateTime get createdAt;
@@ -1379,6 +1431,7 @@ mixin _$UserEntity {
   String? get varianceSortPreference => throw _privateConstructorUsedError;
   List<String>? get dashboardVisibleCharts =>
       throw _privateConstructorUsedError;
+  bool get isAppLockEnabled => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $UserEntityCopyWith<UserEntity> get copyWith =>
@@ -1399,7 +1452,8 @@ abstract class $UserEntityCopyWith<$Res> {
       bool onboardingComplete,
       bool budgetSetupComplete,
       String? varianceSortPreference,
-      List<String>? dashboardVisibleCharts});
+      List<String>? dashboardVisibleCharts,
+      bool isAppLockEnabled});
 }
 
 /// @nodoc
@@ -1423,6 +1477,7 @@ class _$UserEntityCopyWithImpl<$Res, $Val extends UserEntity>
     Object? budgetSetupComplete = null,
     Object? varianceSortPreference = freezed,
     Object? dashboardVisibleCharts = freezed,
+    Object? isAppLockEnabled = null,
   }) {
     return _then(_value.copyWith(
       uid: null == uid
@@ -1457,6 +1512,10 @@ class _$UserEntityCopyWithImpl<$Res, $Val extends UserEntity>
           ? _value.dashboardVisibleCharts
           : dashboardVisibleCharts // ignore: cast_nullable_to_non_nullable
               as List<String>?,
+      isAppLockEnabled: null == isAppLockEnabled
+          ? _value.isAppLockEnabled
+          : isAppLockEnabled // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
   }
 }
@@ -1477,7 +1536,8 @@ abstract class _$$UserEntityImplCopyWith<$Res>
       bool onboardingComplete,
       bool budgetSetupComplete,
       String? varianceSortPreference,
-      List<String>? dashboardVisibleCharts});
+      List<String>? dashboardVisibleCharts,
+      bool isAppLockEnabled});
 }
 
 /// @nodoc
@@ -1499,6 +1559,7 @@ class __$$UserEntityImplCopyWithImpl<$Res>
     Object? budgetSetupComplete = null,
     Object? varianceSortPreference = freezed,
     Object? dashboardVisibleCharts = freezed,
+    Object? isAppLockEnabled = null,
   }) {
     return _then(_$UserEntityImpl(
       uid: null == uid
@@ -1533,6 +1594,10 @@ class __$$UserEntityImplCopyWithImpl<$Res>
           ? _value._dashboardVisibleCharts
           : dashboardVisibleCharts // ignore: cast_nullable_to_non_nullable
               as List<String>?,
+      isAppLockEnabled: null == isAppLockEnabled
+          ? _value.isAppLockEnabled
+          : isAppLockEnabled // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -1548,7 +1613,8 @@ class _$UserEntityImpl implements _UserEntity {
       this.onboardingComplete = false,
       this.budgetSetupComplete = false,
       this.varianceSortPreference,
-      final List<String>? dashboardVisibleCharts})
+      final List<String>? dashboardVisibleCharts,
+      this.isAppLockEnabled = false})
       : _dashboardVisibleCharts = dashboardVisibleCharts;
 
   @override
@@ -1579,8 +1645,12 @@ class _$UserEntityImpl implements _UserEntity {
   }
 
   @override
+  @JsonKey()
+  final bool isAppLockEnabled;
+
+  @override
   String toString() {
-    return 'UserEntity(uid: $uid, email: $email, displayName: $displayName, photoUrl: $photoUrl, onboardingComplete: $onboardingComplete, budgetSetupComplete: $budgetSetupComplete, varianceSortPreference: $varianceSortPreference, dashboardVisibleCharts: $dashboardVisibleCharts)';
+    return 'UserEntity(uid: $uid, email: $email, displayName: $displayName, photoUrl: $photoUrl, onboardingComplete: $onboardingComplete, budgetSetupComplete: $budgetSetupComplete, varianceSortPreference: $varianceSortPreference, dashboardVisibleCharts: $dashboardVisibleCharts, isAppLockEnabled: $isAppLockEnabled)';
   }
 
   @override
@@ -1601,7 +1671,9 @@ class _$UserEntityImpl implements _UserEntity {
             (identical(other.varianceSortPreference, varianceSortPreference) ||
                 other.varianceSortPreference == varianceSortPreference) &&
             const DeepCollectionEquality().equals(
-                other._dashboardVisibleCharts, _dashboardVisibleCharts));
+                other._dashboardVisibleCharts, _dashboardVisibleCharts) &&
+            (identical(other.isAppLockEnabled, isAppLockEnabled) ||
+                other.isAppLockEnabled == isAppLockEnabled));
   }
 
   @override
@@ -1614,7 +1686,8 @@ class _$UserEntityImpl implements _UserEntity {
       onboardingComplete,
       budgetSetupComplete,
       varianceSortPreference,
-      const DeepCollectionEquality().hash(_dashboardVisibleCharts));
+      const DeepCollectionEquality().hash(_dashboardVisibleCharts),
+      isAppLockEnabled);
 
   @JsonKey(ignore: true)
   @override
@@ -1632,7 +1705,8 @@ abstract class _UserEntity implements UserEntity {
       final bool onboardingComplete,
       final bool budgetSetupComplete,
       final String? varianceSortPreference,
-      final List<String>? dashboardVisibleCharts}) = _$UserEntityImpl;
+      final List<String>? dashboardVisibleCharts,
+      final bool isAppLockEnabled}) = _$UserEntityImpl;
 
   @override
   String get uid;
@@ -1650,6 +1724,8 @@ abstract class _UserEntity implements UserEntity {
   String? get varianceSortPreference;
   @override
   List<String>? get dashboardVisibleCharts;
+  @override
+  bool get isAppLockEnabled;
   @override
   @JsonKey(ignore: true)
   _$$UserEntityImplCopyWith<_$UserEntityImpl> get copyWith =>

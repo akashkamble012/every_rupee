@@ -39,6 +39,11 @@ class IsarTransaction {
   bool needsReview = false;
 
   @Index()
+  bool isRecurring = false;
+
+  List<String> tags = [];
+
+  @Index()
   late bool isDeleted;
 
   late DateTime createdAt;

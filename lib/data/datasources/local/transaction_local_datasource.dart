@@ -168,6 +168,8 @@ class TransactionLocalDataSource {
         note: m.note,
         smsSource: m.smsSource,
         needsReview: m.needsReview,
+        isRecurring: m.isRecurring,
+        tags: m.tags,
         isDeleted: m.isDeleted,
         createdAt: m.createdAt,
         lastModifiedAt: m.lastModifiedAt,
@@ -184,6 +186,8 @@ class TransactionLocalDataSource {
     ..note = e.note
     ..smsSource = e.smsSource
     ..needsReview = e.needsReview
+    ..isRecurring = e.isRecurring
+    ..tags = e.tags
     ..isDeleted = e.isDeleted
     ..createdAt = e.createdAt
     ..lastModifiedAt = DateTime.now();

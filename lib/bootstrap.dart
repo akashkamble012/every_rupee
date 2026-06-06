@@ -10,6 +10,7 @@ import 'data/datasources/local/isar_provider.dart';
 import 'data/datasources/remote/firestore_sync_service.dart';
 import 'domain/repositories/repositories.dart';
 import 'core/providers/app_providers.dart';
+import 'presentation/widgets/auth/app_lock_guard.dart';
 /// Called from main(). Initialises Firebase, Isar, DI, SMS listener, and
 /// then mounts the root Flutter widget.
 Future<void> bootstrap() async {
@@ -49,11 +50,13 @@ class EveryRupeeApp extends StatelessWidget {
       child: Builder(
         builder: (context) {
           final router = getIt<AppRouter>().router;
-          return MaterialApp.router(
-            title: 'Every Rupee',
-            debugShowCheckedModeBanner: false,
-            theme: AppDesign.darkTheme,
-            routerConfig: router,
+          return AppLockGuard(
+            child: MaterialApp.router(
+              title: 'Every Rupee',
+              debugShowCheckedModeBanner: false,
+              theme: AppDesign.darkTheme,
+              routerConfig: router,
+            ),
           );
         },
       ),

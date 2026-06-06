@@ -47,4 +47,8 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<Result<void>> updateDashboardVisibleCharts(String uid, List<String> charts) =>
       _remote.updateDashboardVisibleCharts(uid, charts);
+
+  @override
+  Future<Result<void>> updateAppLockStatus(String uid, bool isEnabled) =>
+      _remote.updateAppLockStatus(uid, isEnabled);
 }

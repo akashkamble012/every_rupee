@@ -339,10 +339,32 @@ class _LedgerTile extends StatelessWidget {
                       .copyWith(color: AppDesign.onBackground),
                 ),
                 const SizedBox(height: 2),
-                Text(
-                  formatTimestamp(tx.date),
-                  style: AppDesign.bodySmall,
+                Row(
+                  children: [
+                    if (tx.isRecurring) ...[
+                      const Icon(Icons.repeat_rounded, size: 12, color: AppDesign.subtle),
+                      const SizedBox(width: 4),
+                    ],
+                    Text(
+                      formatTimestamp(tx.date),
+                      style: AppDesign.bodySmall,
+                    ),
+                  ],
                 ),
+                if (tx.tags.isNotEmpty) ...[
+                  const SizedBox(height: 4),
+                  Wrap(
+                    spacing: 4,
+                    children: tx.tags.map((tag) => Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                      decoration: BoxDecoration(
+                        color: AppDesign.primary.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: Text(tag, style: AppDesign.labelLarge.copyWith(color: AppDesign.primary, fontSize: 10)),
+                    )).toList(),
+                  ),
+                ],
               ],
             ),
           ),
