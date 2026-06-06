@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/di/injection.dart';
 import '../../../core/theme/app_design.dart';
+import '../../../core/utils/formatters.dart';
+import '../../../domain/entities/entities.dart';
 import '../../blocs/insights/insights_bloc.dart';
 import '../../widgets/charts/insights_charts.dart';
 
@@ -73,6 +75,36 @@ class _LoadedBody extends StatelessWidget {
     required this.historicalVariances,
   });
 
+  List<Map<String, dynamic>> _calculateMoM() {
+    if (historicalVariances.length < 2) return [];
+    
+    final currentVariances = historicalVariances.last as List<CategoryVarianceEntity>;
+    final prevVariances = historicalVariances[historicalVariances.length - 2] as List<CategoryVarianceEntity>;
+    
+    final List<Map<String, dynamic>> momChanges = [];
+    
+    for (var cv in currentVariances) {
+      final pv = prevVariances.where((v) => v.category.id == cv.category.id).firstOrNull;
+      if (pv != null) {
+        final diff = cv.spent - pv.spent;
+        if (diff.abs() > 0) {
+          final percent = pv.spent == 0 ? 100.0 : (diff / pv.spent) * 100;
+          momChanges.add({
+            'category': cv.category.name,
+            'iconCode': cv.category.iconCode,
+            'diff': diff,
+            'percent': percent,
+            'currentSpent': cv.spent,
+            'prevSpent': pv.spent,
+          });
+        }
+      }
+    }
+    
+    momChanges.sort((a, b) => (b['diff'] as double).abs().compareTo((a['diff'] as double).abs()));
+    return momChanges.take(5).toList(); // top 5 changes
+  }
+
   @override
   Widget build(BuildContext context) {
     return ListView(
@@ -101,12 +133,62 @@ class _LoadedBody extends StatelessWidget {
           child: DailySpendChart(transactions: List.from(transactions), month: month),
         ),
         const SizedBox(height: AppDesign.s16),
+        const SizedBox(height: AppDesign.s16),
         _ChartCard(
           title: 'Payment Method Breakdown',
           child: PaymentMethodChart(transactions: List.from(transactions)),
         ),
+        const SizedBox(height: AppDesign.s16),
+        _buildMoMSection(),
         const SizedBox(height: 100), // padding for bottom nav
       ],
+    );
+  }
+
+  Widget _buildMoMSection() {
+    final momChanges = _calculateMoM();
+    if (momChanges.isEmpty) return const SizedBox.shrink();
+
+    return _ChartCard(
+      title: 'Month-over-Month Biggest Changes',
+      child: Column(
+        children: momChanges.map((change) {
+          final isIncrease = (change['diff'] as double) > 0;
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: AppDesign.s8),
+            child: Row(
+              children: [
+                Icon(
+                  change['iconCode'] != null 
+                    ? IconData(int.parse(change['iconCode']), fontFamily: 'MaterialIcons') 
+                    : Icons.category_rounded,
+                  color: AppDesign.subtle,
+                  size: 20,
+                ),
+                const SizedBox(width: AppDesign.s12),
+                Expanded(
+                  child: Text(change['category'], style: AppDesign.bodyMedium),
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      '${isIncrease ? '+' : ''}${formatINR(change['diff'])}',
+                      style: AppDesign.labelLarge.copyWith(
+                        color: isIncrease ? AppDesign.error : AppDesign.success,
+                      ),
+                    ),
+                    Text(
+                      '${isIncrease ? '+' : ''}${(change['percent'] as double).toStringAsFixed(1)}%',
+                      style: AppDesign.bodySmall.copyWith(color: AppDesign.subtle),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          );
+        }).toList(),
+      ),
     );
   }
 }

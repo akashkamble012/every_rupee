@@ -40,6 +40,7 @@ class TransactionLocalDataSource {
     String? categoryId,
     TransactionType? type,
     String? searchText,
+    bool? needsReview,
   }) async {
     try {
       var query = _db.db.isarTransactions.filter().isDeletedEqualTo(false);
@@ -52,6 +53,9 @@ class TransactionLocalDataSource {
       }
       if (type != null) {
         query = query.typeIndexEqualTo(type.index);
+      }
+      if (needsReview != null) {
+        query = query.needsReviewEqualTo(needsReview);
       }
 
       final results = await query
@@ -163,6 +167,7 @@ class TransactionLocalDataSource {
             : null,
         note: m.note,
         smsSource: m.smsSource,
+        needsReview: m.needsReview,
         isDeleted: m.isDeleted,
         createdAt: m.createdAt,
         lastModifiedAt: m.lastModifiedAt,
@@ -178,6 +183,7 @@ class TransactionLocalDataSource {
     ..paymentModeIndex = e.paymentMode?.index
     ..note = e.note
     ..smsSource = e.smsSource
+    ..needsReview = e.needsReview
     ..isDeleted = e.isDeleted
     ..createdAt = e.createdAt
     ..lastModifiedAt = DateTime.now();

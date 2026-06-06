@@ -23,6 +23,7 @@ class TransactionEntity with _$TransactionEntity {
     PaymentMode? paymentMode,
     String? note,
     String? smsSource,          // populated when parsed from SMS
+    @Default(false) bool needsReview, // true if auto-captured and unverified
     @Default(false) bool isDeleted,
     required DateTime createdAt,
     required DateTime lastModifiedAt,

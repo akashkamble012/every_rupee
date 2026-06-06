@@ -57,23 +57,28 @@ const IsarTransactionSchema = CollectionSchema(
       name: r'merchant',
       type: IsarType.string,
     ),
-    r'note': PropertySchema(
+    r'needsReview': PropertySchema(
       id: 8,
+      name: r'needsReview',
+      type: IsarType.bool,
+    ),
+    r'note': PropertySchema(
+      id: 9,
       name: r'note',
       type: IsarType.string,
     ),
     r'paymentModeIndex': PropertySchema(
-      id: 9,
+      id: 10,
       name: r'paymentModeIndex',
       type: IsarType.long,
     ),
     r'smsSource': PropertySchema(
-      id: 10,
+      id: 11,
       name: r'smsSource',
       type: IsarType.string,
     ),
     r'typeIndex': PropertySchema(
-      id: 11,
+      id: 12,
       name: r'typeIndex',
       type: IsarType.long,
     )
@@ -133,6 +138,19 @@ const IsarTransactionSchema = CollectionSchema(
           name: r'categoryId',
           type: IndexType.hash,
           caseSensitive: true,
+        )
+      ],
+    ),
+    r'needsReview': IndexSchema(
+      id: 9078383057249155778,
+      name: r'needsReview',
+      unique: false,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'needsReview',
+          type: IndexType.value,
+          caseSensitive: false,
         )
       ],
     ),
@@ -201,10 +219,11 @@ void _isarTransactionSerialize(
   writer.writeBool(offsets[5], object.isDeleted);
   writer.writeDateTime(offsets[6], object.lastModifiedAt);
   writer.writeString(offsets[7], object.merchant);
-  writer.writeString(offsets[8], object.note);
-  writer.writeLong(offsets[9], object.paymentModeIndex);
-  writer.writeString(offsets[10], object.smsSource);
-  writer.writeLong(offsets[11], object.typeIndex);
+  writer.writeBool(offsets[8], object.needsReview);
+  writer.writeString(offsets[9], object.note);
+  writer.writeLong(offsets[10], object.paymentModeIndex);
+  writer.writeString(offsets[11], object.smsSource);
+  writer.writeLong(offsets[12], object.typeIndex);
 }
 
 IsarTransaction _isarTransactionDeserialize(
@@ -222,10 +241,11 @@ IsarTransaction _isarTransactionDeserialize(
   object.isDeleted = reader.readBool(offsets[5]);
   object.lastModifiedAt = reader.readDateTime(offsets[6]);
   object.merchant = reader.readStringOrNull(offsets[7]);
-  object.note = reader.readStringOrNull(offsets[8]);
-  object.paymentModeIndex = reader.readLongOrNull(offsets[9]);
-  object.smsSource = reader.readStringOrNull(offsets[10]);
-  object.typeIndex = reader.readLong(offsets[11]);
+  object.needsReview = reader.readBool(offsets[8]);
+  object.note = reader.readStringOrNull(offsets[9]);
+  object.paymentModeIndex = reader.readLongOrNull(offsets[10]);
+  object.smsSource = reader.readStringOrNull(offsets[11]);
+  object.typeIndex = reader.readLong(offsets[12]);
   return object;
 }
 
@@ -253,12 +273,14 @@ P _isarTransactionDeserializeProp<P>(
     case 7:
       return (reader.readStringOrNull(offset)) as P;
     case 8:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readBool(offset)) as P;
     case 9:
-      return (reader.readLongOrNull(offset)) as P;
-    case 10:
       return (reader.readStringOrNull(offset)) as P;
+    case 10:
+      return (reader.readLongOrNull(offset)) as P;
     case 11:
+      return (reader.readStringOrNull(offset)) as P;
+    case 12:
       return (reader.readLong(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -351,6 +373,14 @@ extension IsarTransactionQueryWhereSort
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
         const IndexWhereClause.any(indexName: r'date'),
+      );
+    });
+  }
+
+  QueryBuilder<IsarTransaction, IsarTransaction, QAfterWhere> anyNeedsReview() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(
+        const IndexWhereClause.any(indexName: r'needsReview'),
       );
     });
   }
@@ -703,6 +733,51 @@ extension IsarTransactionQueryWhere
               indexName: r'categoryId',
               lower: [],
               upper: [categoryId],
+              includeUpper: false,
+            ));
+      }
+    });
+  }
+
+  QueryBuilder<IsarTransaction, IsarTransaction, QAfterWhereClause>
+      needsReviewEqualTo(bool needsReview) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'needsReview',
+        value: [needsReview],
+      ));
+    });
+  }
+
+  QueryBuilder<IsarTransaction, IsarTransaction, QAfterWhereClause>
+      needsReviewNotEqualTo(bool needsReview) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'needsReview',
+              lower: [],
+              upper: [needsReview],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'needsReview',
+              lower: [needsReview],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'needsReview',
+              lower: [needsReview],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'needsReview',
+              lower: [],
+              upper: [needsReview],
               includeUpper: false,
             ));
       }
@@ -1484,6 +1559,16 @@ extension IsarTransactionQueryFilter
   }
 
   QueryBuilder<IsarTransaction, IsarTransaction, QAfterFilterCondition>
+      needsReviewEqualTo(bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'needsReview',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<IsarTransaction, IsarTransaction, QAfterFilterCondition>
       noteIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -2038,6 +2123,20 @@ extension IsarTransactionQuerySortBy
     });
   }
 
+  QueryBuilder<IsarTransaction, IsarTransaction, QAfterSortBy>
+      sortByNeedsReview() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'needsReview', Sort.asc);
+    });
+  }
+
+  QueryBuilder<IsarTransaction, IsarTransaction, QAfterSortBy>
+      sortByNeedsReviewDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'needsReview', Sort.desc);
+    });
+  }
+
   QueryBuilder<IsarTransaction, IsarTransaction, QAfterSortBy> sortByNote() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'note', Sort.asc);
@@ -2217,6 +2316,20 @@ extension IsarTransactionQuerySortThenBy
     });
   }
 
+  QueryBuilder<IsarTransaction, IsarTransaction, QAfterSortBy>
+      thenByNeedsReview() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'needsReview', Sort.asc);
+    });
+  }
+
+  QueryBuilder<IsarTransaction, IsarTransaction, QAfterSortBy>
+      thenByNeedsReviewDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'needsReview', Sort.desc);
+    });
+  }
+
   QueryBuilder<IsarTransaction, IsarTransaction, QAfterSortBy> thenByNote() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'note', Sort.asc);
@@ -2329,6 +2442,13 @@ extension IsarTransactionQueryWhereDistinct
     });
   }
 
+  QueryBuilder<IsarTransaction, IsarTransaction, QDistinct>
+      distinctByNeedsReview() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'needsReview');
+    });
+  }
+
   QueryBuilder<IsarTransaction, IsarTransaction, QDistinct> distinctByNote(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -2413,6 +2533,12 @@ extension IsarTransactionQueryProperty
   QueryBuilder<IsarTransaction, String?, QQueryOperations> merchantProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'merchant');
+    });
+  }
+
+  QueryBuilder<IsarTransaction, bool, QQueryOperations> needsReviewProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'needsReview');
     });
   }
 

@@ -35,6 +35,7 @@ class DashboardState with _$DashboardState {
     required MonthlySurplusEntity surplus,
     required List<CategoryVarianceEntity> variances,
     required List<TransactionEntity> recentTransactions,
+    required List<TransactionEntity> pendingTransactions,
     required List<MonthlySurplusEntity> wealthHistory,
     required List<List<CategoryVarianceEntity>> historicalVariances,
     required String sortPreference,
@@ -150,7 +151,6 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       return;
     }
 
-    // Fetch all transactions for the month for charts, but UI can limit to 10 for list
     final txResult = await _txRepo.getTransactionsPaged(
         offset: 0,
         limit: 10000,
@@ -158,6 +158,11 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
         toDate:
             DateTime(_currentMonth.year, _currentMonth.month + 1, 1)
                 .subtract(const Duration(milliseconds: 1)));
+
+    final pendingTxResult = await _txRepo.getTransactionsPaged(
+        offset: 0,
+        limit: 100, // Load up to 100 pending transactions
+        needsReview: true);
 
     final wealthHistoryResult = await _wealthHistoryUseCase(_currentMonth);
     if (wealthHistoryResult.isErr) {
@@ -182,7 +187,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     String currentTxSort = txSortPref ?? 'dateDesc';
     if (txSortPref == null) {
       state.maybeWhen(
-        loaded: (m, s, v, rt, wh, hv, sp, ts, vC) {
+        loaded: (m, s, v, rt, pt, wh, hv, sp, ts, vC) {
           currentTxSort = ts;
         },
         orElse: () {},
@@ -205,6 +210,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       surplus: surplusResult.value,
       variances: _sortVariances(varianceResult.value, _authRepo.currentUser?.varianceSortPreference ?? 'highestSpent'),
       recentTransactions: sortedTxs,
+      pendingTransactions: pendingTxResult.isOk ? List.from(pendingTxResult.value) : [],
       wealthHistory: wealthHistoryResult.value,
       historicalVariances: historicalVariances,
       sortPreference: _authRepo.currentUser?.varianceSortPreference ?? 'highestSpent',

@@ -81,6 +81,7 @@ abstract interface class TransactionRepository {
     String? categoryId,
     TransactionType? type,
     String? searchText,
+    bool? needsReview,
   });
 
   Future<Result<TransactionEntity>> saveTransaction(TransactionEntity tx);

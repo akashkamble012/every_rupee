@@ -50,13 +50,14 @@ class _DashboardView extends StatelessWidget {
                   child: Text(message,
                       style: AppDesign.bodyMedium
                           .copyWith(color: AppDesign.error))),
-              loaded: (month, surplus, variances, recentTransactions,
+              loaded: (month, surplus, variances, recentTransactions, pendingTransactions,
                       wealthHistory, historicalVariances, sortPreference, txSortPref, visibleCharts) =>
                   _LoadedBody(
                 month: month,
                 surplus: surplus,
                 variances: variances,
                 recentTransactions: recentTransactions,
+                pendingTransactions: pendingTransactions,
                 wealthHistory: wealthHistory,
                 historicalVariances: historicalVariances,
                 sortPreference: sortPreference,
@@ -78,6 +79,7 @@ class _LoadedBody extends StatelessWidget {
   final MonthlySurplusEntity surplus;
   final List<CategoryVarianceEntity> variances;
   final List<TransactionEntity> recentTransactions;
+  final List<TransactionEntity> pendingTransactions;
   final List<MonthlySurplusEntity> wealthHistory;
   final List<List<CategoryVarianceEntity>> historicalVariances;
   final String sortPreference;
@@ -91,6 +93,7 @@ class _LoadedBody extends StatelessWidget {
     required this.surplus,
     required this.variances,
     required this.recentTransactions,
+    required this.pendingTransactions,
     required this.wealthHistory,
     required this.historicalVariances,
     required this.sortPreference,
@@ -112,6 +115,14 @@ class _LoadedBody extends StatelessWidget {
             onNext: onNext,
           ),
         ),
+
+        if (pendingTransactions.isNotEmpty)
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(AppDesign.s16, AppDesign.s8, AppDesign.s16, AppDesign.s16),
+              child: _PendingReviewBanner(pendingTransactions: pendingTransactions),
+            ),
+          ),
 
         // ── Macro numbers card ──────────────────────────────────────
         SliverToBoxAdapter(
@@ -708,6 +719,61 @@ class _RecentTxTile extends StatelessWidget {
             '${isDebit ? '-' : '+'}${formatINR(tx.amount)}',
             style: AppDesign.amountSmall
                 .copyWith(color: isDebit ? AppDesign.debit : AppDesign.credit),
+          ),
+        ],
+      ),
+    );
+  }
+  }
+
+
+// ── Pending Review Banner ───────────────────────────────────────────────────
+
+class _PendingReviewBanner extends StatelessWidget {
+  final List<TransactionEntity> pendingTransactions;
+
+  const _PendingReviewBanner({required this.pendingTransactions});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: AppDesign.s16, vertical: AppDesign.s12),
+      decoration: BoxDecoration(
+        color: AppDesign.warning.withOpacity(0.1),
+        borderRadius: AppDesign.roundMedium,
+        border: Border.all(color: AppDesign.warning.withOpacity(0.5)),
+      ),
+      child: Row(
+        children: [
+          const Icon(Icons.warning_amber_rounded, color: AppDesign.warning),
+          const SizedBox(width: AppDesign.s12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '${pendingTransactions.length} Pending Review',
+                  style: AppDesign.titleMedium.copyWith(color: AppDesign.onBackground),
+                ),
+                Text(
+                  'Auto-captured from SMS. Tap to categorize.',
+                  style: AppDesign.bodySmall.copyWith(color: AppDesign.subtle),
+                ),
+              ],
+            ),
+          ),
+          TextButton(
+            onPressed: () {
+              // Simply navigate to ledger with a custom filter maybe?
+              // Or open a dialog. Since we don't have a dedicated review screen yet,
+              // we can just push to ledger. But ledger doesn't have a needsReview filter yet in UI.
+              // For now, let's show a snackbar or push to a simple review modal if we create one.
+              // We can push to the add transaction screen for the first one for simplicity.
+              if (pendingTransactions.isNotEmpty) {
+                context.push('${AppRoutes.transactionForm}?editId=${pendingTransactions.first.id}');
+              }
+            },
+            child: const Text('Review', style: TextStyle(color: AppDesign.primary, fontWeight: FontWeight.bold)),
           ),
         ],
       ),

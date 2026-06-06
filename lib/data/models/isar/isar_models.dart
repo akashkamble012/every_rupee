@@ -34,6 +34,9 @@ class IsarTransaction {
   int? paymentModeIndex;
   String? note;
   String? smsSource;
+  
+  @Index()
+  bool needsReview = false;
 
   @Index()
   late bool isDeleted;

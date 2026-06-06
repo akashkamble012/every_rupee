@@ -1032,6 +1032,7 @@ mixin _$DashboardState {
             MonthlySurplusEntity surplus,
             List<CategoryVarianceEntity> variances,
             List<TransactionEntity> recentTransactions,
+            List<TransactionEntity> pendingTransactions,
             List<MonthlySurplusEntity> wealthHistory,
             List<List<CategoryVarianceEntity>> historicalVariances,
             String sortPreference,
@@ -1050,6 +1051,7 @@ mixin _$DashboardState {
             MonthlySurplusEntity surplus,
             List<CategoryVarianceEntity> variances,
             List<TransactionEntity> recentTransactions,
+            List<TransactionEntity> pendingTransactions,
             List<MonthlySurplusEntity> wealthHistory,
             List<List<CategoryVarianceEntity>> historicalVariances,
             String sortPreference,
@@ -1068,6 +1070,7 @@ mixin _$DashboardState {
             MonthlySurplusEntity surplus,
             List<CategoryVarianceEntity> variances,
             List<TransactionEntity> recentTransactions,
+            List<TransactionEntity> pendingTransactions,
             List<MonthlySurplusEntity> wealthHistory,
             List<List<CategoryVarianceEntity>> historicalVariances,
             String sortPreference,
@@ -1168,6 +1171,7 @@ class _$InitialImpl implements _Initial {
             MonthlySurplusEntity surplus,
             List<CategoryVarianceEntity> variances,
             List<TransactionEntity> recentTransactions,
+            List<TransactionEntity> pendingTransactions,
             List<MonthlySurplusEntity> wealthHistory,
             List<List<CategoryVarianceEntity>> historicalVariances,
             String sortPreference,
@@ -1189,6 +1193,7 @@ class _$InitialImpl implements _Initial {
             MonthlySurplusEntity surplus,
             List<CategoryVarianceEntity> variances,
             List<TransactionEntity> recentTransactions,
+            List<TransactionEntity> pendingTransactions,
             List<MonthlySurplusEntity> wealthHistory,
             List<List<CategoryVarianceEntity>> historicalVariances,
             String sortPreference,
@@ -1210,6 +1215,7 @@ class _$InitialImpl implements _Initial {
             MonthlySurplusEntity surplus,
             List<CategoryVarianceEntity> variances,
             List<TransactionEntity> recentTransactions,
+            List<TransactionEntity> pendingTransactions,
             List<MonthlySurplusEntity> wealthHistory,
             List<List<CategoryVarianceEntity>> historicalVariances,
             String sortPreference,
@@ -1312,6 +1318,7 @@ class _$LoadingImpl implements _Loading {
             MonthlySurplusEntity surplus,
             List<CategoryVarianceEntity> variances,
             List<TransactionEntity> recentTransactions,
+            List<TransactionEntity> pendingTransactions,
             List<MonthlySurplusEntity> wealthHistory,
             List<List<CategoryVarianceEntity>> historicalVariances,
             String sortPreference,
@@ -1333,6 +1340,7 @@ class _$LoadingImpl implements _Loading {
             MonthlySurplusEntity surplus,
             List<CategoryVarianceEntity> variances,
             List<TransactionEntity> recentTransactions,
+            List<TransactionEntity> pendingTransactions,
             List<MonthlySurplusEntity> wealthHistory,
             List<List<CategoryVarianceEntity>> historicalVariances,
             String sortPreference,
@@ -1354,6 +1362,7 @@ class _$LoadingImpl implements _Loading {
             MonthlySurplusEntity surplus,
             List<CategoryVarianceEntity> variances,
             List<TransactionEntity> recentTransactions,
+            List<TransactionEntity> pendingTransactions,
             List<MonthlySurplusEntity> wealthHistory,
             List<List<CategoryVarianceEntity>> historicalVariances,
             String sortPreference,
@@ -1422,6 +1431,7 @@ abstract class _$$LoadedImplCopyWith<$Res> {
       MonthlySurplusEntity surplus,
       List<CategoryVarianceEntity> variances,
       List<TransactionEntity> recentTransactions,
+      List<TransactionEntity> pendingTransactions,
       List<MonthlySurplusEntity> wealthHistory,
       List<List<CategoryVarianceEntity>> historicalVariances,
       String sortPreference,
@@ -1446,6 +1456,7 @@ class __$$LoadedImplCopyWithImpl<$Res>
     Object? surplus = null,
     Object? variances = null,
     Object? recentTransactions = null,
+    Object? pendingTransactions = null,
     Object? wealthHistory = null,
     Object? historicalVariances = null,
     Object? sortPreference = null,
@@ -1468,6 +1479,10 @@ class __$$LoadedImplCopyWithImpl<$Res>
       recentTransactions: null == recentTransactions
           ? _value._recentTransactions
           : recentTransactions // ignore: cast_nullable_to_non_nullable
+              as List<TransactionEntity>,
+      pendingTransactions: null == pendingTransactions
+          ? _value._pendingTransactions
+          : pendingTransactions // ignore: cast_nullable_to_non_nullable
               as List<TransactionEntity>,
       wealthHistory: null == wealthHistory
           ? _value._wealthHistory
@@ -1509,6 +1524,7 @@ class _$LoadedImpl implements _Loaded {
       required this.surplus,
       required final List<CategoryVarianceEntity> variances,
       required final List<TransactionEntity> recentTransactions,
+      required final List<TransactionEntity> pendingTransactions,
       required final List<MonthlySurplusEntity> wealthHistory,
       required final List<List<CategoryVarianceEntity>> historicalVariances,
       required this.sortPreference,
@@ -1516,6 +1532,7 @@ class _$LoadedImpl implements _Loaded {
       final List<String> visibleCharts = const []})
       : _variances = variances,
         _recentTransactions = recentTransactions,
+        _pendingTransactions = pendingTransactions,
         _wealthHistory = wealthHistory,
         _historicalVariances = historicalVariances,
         _visibleCharts = visibleCharts;
@@ -1539,6 +1556,15 @@ class _$LoadedImpl implements _Loaded {
       return _recentTransactions;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_recentTransactions);
+  }
+
+  final List<TransactionEntity> _pendingTransactions;
+  @override
+  List<TransactionEntity> get pendingTransactions {
+    if (_pendingTransactions is EqualUnmodifiableListView)
+      return _pendingTransactions;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_pendingTransactions);
   }
 
   final List<MonthlySurplusEntity> _wealthHistory;
@@ -1574,7 +1600,7 @@ class _$LoadedImpl implements _Loaded {
 
   @override
   String toString() {
-    return 'DashboardState.loaded(month: $month, surplus: $surplus, variances: $variances, recentTransactions: $recentTransactions, wealthHistory: $wealthHistory, historicalVariances: $historicalVariances, sortPreference: $sortPreference, txSortPref: $txSortPref, visibleCharts: $visibleCharts)';
+    return 'DashboardState.loaded(month: $month, surplus: $surplus, variances: $variances, recentTransactions: $recentTransactions, pendingTransactions: $pendingTransactions, wealthHistory: $wealthHistory, historicalVariances: $historicalVariances, sortPreference: $sortPreference, txSortPref: $txSortPref, visibleCharts: $visibleCharts)';
   }
 
   @override
@@ -1588,6 +1614,8 @@ class _$LoadedImpl implements _Loaded {
                 .equals(other._variances, _variances) &&
             const DeepCollectionEquality()
                 .equals(other._recentTransactions, _recentTransactions) &&
+            const DeepCollectionEquality()
+                .equals(other._pendingTransactions, _pendingTransactions) &&
             const DeepCollectionEquality()
                 .equals(other._wealthHistory, _wealthHistory) &&
             const DeepCollectionEquality()
@@ -1607,6 +1635,7 @@ class _$LoadedImpl implements _Loaded {
       surplus,
       const DeepCollectionEquality().hash(_variances),
       const DeepCollectionEquality().hash(_recentTransactions),
+      const DeepCollectionEquality().hash(_pendingTransactions),
       const DeepCollectionEquality().hash(_wealthHistory),
       const DeepCollectionEquality().hash(_historicalVariances),
       sortPreference,
@@ -1629,6 +1658,7 @@ class _$LoadedImpl implements _Loaded {
             MonthlySurplusEntity surplus,
             List<CategoryVarianceEntity> variances,
             List<TransactionEntity> recentTransactions,
+            List<TransactionEntity> pendingTransactions,
             List<MonthlySurplusEntity> wealthHistory,
             List<List<CategoryVarianceEntity>> historicalVariances,
             String sortPreference,
@@ -1637,8 +1667,17 @@ class _$LoadedImpl implements _Loaded {
         loaded,
     required TResult Function(String message) failure,
   }) {
-    return loaded(month, surplus, variances, recentTransactions, wealthHistory,
-        historicalVariances, sortPreference, txSortPref, visibleCharts);
+    return loaded(
+        month,
+        surplus,
+        variances,
+        recentTransactions,
+        pendingTransactions,
+        wealthHistory,
+        historicalVariances,
+        sortPreference,
+        txSortPref,
+        visibleCharts);
   }
 
   @override
@@ -1651,6 +1690,7 @@ class _$LoadedImpl implements _Loaded {
             MonthlySurplusEntity surplus,
             List<CategoryVarianceEntity> variances,
             List<TransactionEntity> recentTransactions,
+            List<TransactionEntity> pendingTransactions,
             List<MonthlySurplusEntity> wealthHistory,
             List<List<CategoryVarianceEntity>> historicalVariances,
             String sortPreference,
@@ -1664,6 +1704,7 @@ class _$LoadedImpl implements _Loaded {
         surplus,
         variances,
         recentTransactions,
+        pendingTransactions,
         wealthHistory,
         historicalVariances,
         sortPreference,
@@ -1681,6 +1722,7 @@ class _$LoadedImpl implements _Loaded {
             MonthlySurplusEntity surplus,
             List<CategoryVarianceEntity> variances,
             List<TransactionEntity> recentTransactions,
+            List<TransactionEntity> pendingTransactions,
             List<MonthlySurplusEntity> wealthHistory,
             List<List<CategoryVarianceEntity>> historicalVariances,
             String sortPreference,
@@ -1696,6 +1738,7 @@ class _$LoadedImpl implements _Loaded {
           surplus,
           variances,
           recentTransactions,
+          pendingTransactions,
           wealthHistory,
           historicalVariances,
           sortPreference,
@@ -1749,6 +1792,7 @@ abstract class _Loaded implements DashboardState {
       required final MonthlySurplusEntity surplus,
       required final List<CategoryVarianceEntity> variances,
       required final List<TransactionEntity> recentTransactions,
+      required final List<TransactionEntity> pendingTransactions,
       required final List<MonthlySurplusEntity> wealthHistory,
       required final List<List<CategoryVarianceEntity>> historicalVariances,
       required final String sortPreference,
@@ -1759,6 +1803,7 @@ abstract class _Loaded implements DashboardState {
   MonthlySurplusEntity get surplus;
   List<CategoryVarianceEntity> get variances;
   List<TransactionEntity> get recentTransactions;
+  List<TransactionEntity> get pendingTransactions;
   List<MonthlySurplusEntity> get wealthHistory;
   List<List<CategoryVarianceEntity>> get historicalVariances;
   String get sortPreference;
@@ -1840,6 +1885,7 @@ class _$FailureImpl implements _Failure {
             MonthlySurplusEntity surplus,
             List<CategoryVarianceEntity> variances,
             List<TransactionEntity> recentTransactions,
+            List<TransactionEntity> pendingTransactions,
             List<MonthlySurplusEntity> wealthHistory,
             List<List<CategoryVarianceEntity>> historicalVariances,
             String sortPreference,
@@ -1861,6 +1907,7 @@ class _$FailureImpl implements _Failure {
             MonthlySurplusEntity surplus,
             List<CategoryVarianceEntity> variances,
             List<TransactionEntity> recentTransactions,
+            List<TransactionEntity> pendingTransactions,
             List<MonthlySurplusEntity> wealthHistory,
             List<List<CategoryVarianceEntity>> historicalVariances,
             String sortPreference,
@@ -1882,6 +1929,7 @@ class _$FailureImpl implements _Failure {
             MonthlySurplusEntity surplus,
             List<CategoryVarianceEntity> variances,
             List<TransactionEntity> recentTransactions,
+            List<TransactionEntity> pendingTransactions,
             List<MonthlySurplusEntity> wealthHistory,
             List<List<CategoryVarianceEntity>> historicalVariances,
             String sortPreference,

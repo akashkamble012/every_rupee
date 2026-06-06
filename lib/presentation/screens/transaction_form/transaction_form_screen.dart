@@ -29,6 +29,7 @@ class _TransactionFormScreenState extends State<TransactionFormScreen> {
   PaymentMode _paymentMode = PaymentMode.upi;
   DateTime _date = DateTime.now();
   bool _saving = false;
+  String? _smsSource;
 
   List<BudgetCategoryEntity> _categories = [];
   List<BudgetCategoryEntity> _allCategories = [];
@@ -72,6 +73,7 @@ class _TransactionFormScreenState extends State<TransactionFormScreen> {
           _paymentMode = tx.paymentMode!;
         }
         _date = tx.date;
+        _smsSource = tx.smsSource;
       });
     }
   }
@@ -115,6 +117,8 @@ class _TransactionFormScreenState extends State<TransactionFormScreen> {
           _merchantCtrl.text.trim().isEmpty ? null : _merchantCtrl.text.trim(),
       paymentMode: _paymentMode,
       note: _noteCtrl.text.trim().isEmpty ? null : _noteCtrl.text.trim(),
+      smsSource: _smsSource,
+      needsReview: false, // Always mark as reviewed when saved manually
       createdAt: now,
       lastModifiedAt: now,
     );

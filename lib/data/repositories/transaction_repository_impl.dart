@@ -23,6 +23,7 @@ class TransactionRepositoryImpl implements TransactionRepository {
     String? categoryId,
     TransactionType? type,
     String? searchText,
+    bool? needsReview,
   }) =>
       _local.getPaged(
         offset: offset,
@@ -32,6 +33,7 @@ class TransactionRepositoryImpl implements TransactionRepository {
         categoryId: categoryId,
         type: type,
         searchText: searchText,
+        needsReview: needsReview,
       );
 
   @override

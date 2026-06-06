@@ -147,6 +147,7 @@ class SmsListenerService {
       ..categoryId = categoryId
       ..merchant = parsed.merchant
       ..smsSource = body
+      ..needsReview = true
       ..isDeleted = false
       ..createdAt = now
       ..lastModifiedAt = now;

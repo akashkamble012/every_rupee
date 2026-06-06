@@ -26,6 +26,8 @@ mixin _$TransactionEntity {
   String? get note => throw _privateConstructorUsedError;
   String? get smsSource =>
       throw _privateConstructorUsedError; // populated when parsed from SMS
+  bool get needsReview =>
+      throw _privateConstructorUsedError; // true if auto-captured and unverified
   bool get isDeleted => throw _privateConstructorUsedError;
   DateTime get createdAt => throw _privateConstructorUsedError;
   DateTime get lastModifiedAt => throw _privateConstructorUsedError;
@@ -51,6 +53,7 @@ abstract class $TransactionEntityCopyWith<$Res> {
       PaymentMode? paymentMode,
       String? note,
       String? smsSource,
+      bool needsReview,
       bool isDeleted,
       DateTime createdAt,
       DateTime lastModifiedAt});
@@ -78,6 +81,7 @@ class _$TransactionEntityCopyWithImpl<$Res, $Val extends TransactionEntity>
     Object? paymentMode = freezed,
     Object? note = freezed,
     Object? smsSource = freezed,
+    Object? needsReview = null,
     Object? isDeleted = null,
     Object? createdAt = null,
     Object? lastModifiedAt = null,
@@ -119,6 +123,10 @@ class _$TransactionEntityCopyWithImpl<$Res, $Val extends TransactionEntity>
           ? _value.smsSource
           : smsSource // ignore: cast_nullable_to_non_nullable
               as String?,
+      needsReview: null == needsReview
+          ? _value.needsReview
+          : needsReview // ignore: cast_nullable_to_non_nullable
+              as bool,
       isDeleted: null == isDeleted
           ? _value.isDeleted
           : isDeleted // ignore: cast_nullable_to_non_nullable
@@ -153,6 +161,7 @@ abstract class _$$TransactionEntityImplCopyWith<$Res>
       PaymentMode? paymentMode,
       String? note,
       String? smsSource,
+      bool needsReview,
       bool isDeleted,
       DateTime createdAt,
       DateTime lastModifiedAt});
@@ -178,6 +187,7 @@ class __$$TransactionEntityImplCopyWithImpl<$Res>
     Object? paymentMode = freezed,
     Object? note = freezed,
     Object? smsSource = freezed,
+    Object? needsReview = null,
     Object? isDeleted = null,
     Object? createdAt = null,
     Object? lastModifiedAt = null,
@@ -219,6 +229,10 @@ class __$$TransactionEntityImplCopyWithImpl<$Res>
           ? _value.smsSource
           : smsSource // ignore: cast_nullable_to_non_nullable
               as String?,
+      needsReview: null == needsReview
+          ? _value.needsReview
+          : needsReview // ignore: cast_nullable_to_non_nullable
+              as bool,
       isDeleted: null == isDeleted
           ? _value.isDeleted
           : isDeleted // ignore: cast_nullable_to_non_nullable
@@ -248,6 +262,7 @@ class _$TransactionEntityImpl implements _TransactionEntity {
       this.paymentMode,
       this.note,
       this.smsSource,
+      this.needsReview = false,
       this.isDeleted = false,
       required this.createdAt,
       required this.lastModifiedAt});
@@ -273,6 +288,10 @@ class _$TransactionEntityImpl implements _TransactionEntity {
 // populated when parsed from SMS
   @override
   @JsonKey()
+  final bool needsReview;
+// true if auto-captured and unverified
+  @override
+  @JsonKey()
   final bool isDeleted;
   @override
   final DateTime createdAt;
@@ -281,7 +300,7 @@ class _$TransactionEntityImpl implements _TransactionEntity {
 
   @override
   String toString() {
-    return 'TransactionEntity(id: $id, amount: $amount, type: $type, date: $date, categoryId: $categoryId, merchant: $merchant, paymentMode: $paymentMode, note: $note, smsSource: $smsSource, isDeleted: $isDeleted, createdAt: $createdAt, lastModifiedAt: $lastModifiedAt)';
+    return 'TransactionEntity(id: $id, amount: $amount, type: $type, date: $date, categoryId: $categoryId, merchant: $merchant, paymentMode: $paymentMode, note: $note, smsSource: $smsSource, needsReview: $needsReview, isDeleted: $isDeleted, createdAt: $createdAt, lastModifiedAt: $lastModifiedAt)';
   }
 
   @override
@@ -302,6 +321,8 @@ class _$TransactionEntityImpl implements _TransactionEntity {
             (identical(other.note, note) || other.note == note) &&
             (identical(other.smsSource, smsSource) ||
                 other.smsSource == smsSource) &&
+            (identical(other.needsReview, needsReview) ||
+                other.needsReview == needsReview) &&
             (identical(other.isDeleted, isDeleted) ||
                 other.isDeleted == isDeleted) &&
             (identical(other.createdAt, createdAt) ||
@@ -322,6 +343,7 @@ class _$TransactionEntityImpl implements _TransactionEntity {
       paymentMode,
       note,
       smsSource,
+      needsReview,
       isDeleted,
       createdAt,
       lastModifiedAt);
@@ -345,6 +367,7 @@ abstract class _TransactionEntity implements TransactionEntity {
       final PaymentMode? paymentMode,
       final String? note,
       final String? smsSource,
+      final bool needsReview,
       final bool isDeleted,
       required final DateTime createdAt,
       required final DateTime lastModifiedAt}) = _$TransactionEntityImpl;
@@ -368,6 +391,8 @@ abstract class _TransactionEntity implements TransactionEntity {
   @override
   String? get smsSource;
   @override // populated when parsed from SMS
+  bool get needsReview;
+  @override // true if auto-captured and unverified
   bool get isDeleted;
   @override
   DateTime get createdAt;
