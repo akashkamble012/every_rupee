@@ -126,10 +126,8 @@ class ExportLedgerUseCase {
       }
 
       // 4. Share
-      if (file != null) {
-        await Share.shareXFiles([XFile(file.path)], text: 'My Ledger Export');
-      }
-
+      await Share.shareXFiles([XFile(file.path)], text: 'My Ledger Export');
+    
       return const Ok(null);
     } catch (e) {
       return Err(

@@ -152,7 +152,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       title: Text('App Lock', style: AppDesign.bodyMedium.copyWith(color: AppDesign.onSurface)),
                       subtitle: Text('Require biometric authentication to open', style: AppDesign.bodySmall),
                       value: user.isAppLockEnabled,
-                      activeColor: AppDesign.primary,
+                      activeThumbColor: AppDesign.primary,
                       onChanged: (val) async {
                         try {
                           final localAuth = getIt<local_auth.LocalAuthentication>();
@@ -212,7 +212,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   onTap: _showExportOptions,
                 ),
               ]),
-              _Section(title: 'About', children: [
+              const _Section(title: 'About', children: [
                 _SettingsTile(
                   icon: Icons.info_outline_rounded,
                   label: 'Version 1.0.0',
@@ -243,7 +243,7 @@ class _Section extends StatelessWidget {
           child: Text(title, style: AppDesign.bodySmall),
         ),
         Container(
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             color: AppDesign.surface,
             borderRadius: AppDesign.roundMedium,
           ),
@@ -275,7 +275,7 @@ class _SettingsTile extends StatelessWidget {
       title: Text(label,
           style: AppDesign.bodyMedium.copyWith(color: c)),
       trailing: onTap != null
-          ? Icon(Icons.chevron_right_rounded,
+          ? const Icon(Icons.chevron_right_rounded,
               color: AppDesign.subtle, size: 18)
           : null,
       onTap: onTap,

@@ -56,7 +56,7 @@ class _MonthlyActionPlanCardState extends State<MonthlyActionPlanCard> {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(AppDesign.s16),
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: AppDesign.surface,
         borderRadius: AppDesign.roundLarge,
         border: Border(
@@ -155,7 +155,7 @@ class QuickStatsCard extends StatelessWidget {
 
     return Container(
       padding: const EdgeInsets.all(AppDesign.s16),
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: AppDesign.surface,
         borderRadius: AppDesign.roundLarge,
       ),

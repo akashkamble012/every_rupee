@@ -317,7 +317,7 @@ class _LedgerTile extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: AppDesign.s8),
       padding: const EdgeInsets.all(AppDesign.s16),
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: AppDesign.surface,
         borderRadius: AppDesign.roundMedium,
       ),

@@ -109,8 +109,11 @@ class _LedgerFilterSheetState extends State<LedgerFilterSheet> {
     );
     if (picked != null) {
       setState(() {
-        if (isFrom) _from = picked;
-        else _to = picked;
+        if (isFrom) {
+          _from = picked;
+        } else {
+          _to = picked;
+        }
       });
     }
   }
@@ -235,7 +238,7 @@ class _LedgerFilterSheetState extends State<LedgerFilterSheet> {
             Text('Category', style: AppDesign.titleMedium),
             const SizedBox(height: AppDesign.s8),
             DropdownButtonFormField<String?>(
-              value: _categoryId,
+              initialValue: _categoryId,
               dropdownColor: AppDesign.surface,
               decoration: const InputDecoration(),
               hint: Text('All categories',

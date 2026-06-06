@@ -5,7 +5,6 @@ import 'package:injectable/injectable.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../../core/error/app_error.dart';
-import '../../../core/utils/app_logger.dart';
 import '../../../domain/entities/entities.dart';
 import '../../../domain/repositories/repositories.dart';
 

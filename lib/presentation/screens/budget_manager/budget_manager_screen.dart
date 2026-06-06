@@ -299,7 +299,7 @@ class _IncomeList extends StatelessWidget {
         final src = sources[i];
         return Container(
           margin: const EdgeInsets.only(bottom: AppDesign.s8),
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             color: AppDesign.surface,
             borderRadius: AppDesign.roundMedium,
           ),
@@ -324,10 +324,9 @@ class _IncomeList extends StatelessWidget {
                     style: AppDesign.amountSmall
                         .copyWith(color: AppDesign.credit)),
                 Text(
-                  'From: ${formatShortDate(src.effectiveFrom)}' +
-                      (src.effectiveUntil != null
+                  'From: ${formatShortDate(src.effectiveFrom)}${src.effectiveUntil != null
                           ? ' → ${formatShortDate(src.effectiveUntil!)}'
-                          : ' (ongoing)'),
+                          : ' (ongoing)'}',
                   style: AppDesign.bodySmall,
                 ),
               ],
@@ -659,7 +658,7 @@ class _DateRow extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(
             horizontal: AppDesign.s16, vertical: AppDesign.s12),
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           color: AppDesign.surface,
           borderRadius: AppDesign.roundMedium,
         ),

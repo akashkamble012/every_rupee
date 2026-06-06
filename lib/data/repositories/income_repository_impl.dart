@@ -58,8 +58,7 @@ class IncomeLocalDataSource {
   Future<Result<void>> softDelete(String id) async {
     try {
       await _db.db.writeTxn(() async {
-        final record =
-            await _db.db.isarIncomeSources.getByIndex('id', [id]);
+        final record = await _db.db.isarIncomeSources.filter().idEqualTo(id).findFirst();
         if (record != null) {
           record.isDeleted = true;
           record.lastModifiedAt = DateTime.now();

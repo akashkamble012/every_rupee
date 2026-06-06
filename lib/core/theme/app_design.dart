@@ -165,17 +165,15 @@ abstract class AppDesign {
         brightness: Brightness.dark,
         scaffoldBackgroundColor: background,
         colorScheme: const ColorScheme.dark(
-          background: background,
           surface: surface,
           primary: primary,
           secondary: credit,
           error: error,
-          onBackground: onBackground,
           onSurface: onSurface,
           onPrimary: Colors.white,
         ),
         textTheme: GoogleFonts.interTextTheme(ThemeData.dark().textTheme),
-        cardTheme: CardThemeData(
+        cardTheme: const CardThemeData(
           color: surface,
           elevation: 0,
           shape: RoundedRectangleBorder(borderRadius: roundMedium),
@@ -198,13 +196,13 @@ abstract class AppDesign {
         inputDecorationTheme: InputDecorationTheme(
           filled: true,
           fillColor: surfaceHigh,
-          border: OutlineInputBorder(
+          border: const OutlineInputBorder(
             borderRadius: roundMedium,
             borderSide: BorderSide.none,
           ),
-          focusedBorder: OutlineInputBorder(
+          focusedBorder: const OutlineInputBorder(
             borderRadius: roundMedium,
-            borderSide: const BorderSide(color: primary, width: 1.5),
+            borderSide: BorderSide(color: primary, width: 1.5),
           ),
           hintStyle: GoogleFonts.inter(color: subtle, fontSize: 14),
           labelStyle: GoogleFonts.inter(color: subtle, fontSize: 14),

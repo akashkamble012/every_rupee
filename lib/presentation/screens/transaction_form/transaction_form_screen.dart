@@ -276,7 +276,7 @@ class _TransactionFormScreenState extends State<TransactionFormScreen> {
             Text('Category', style: AppDesign.titleMedium),
             const SizedBox(height: AppDesign.s8),
             DropdownButtonFormField<String>(
-              value: _selectedCategoryId,
+              initialValue: _selectedCategoryId,
               dropdownColor: AppDesign.surfaceHigh,
               decoration: const InputDecoration(),
               hint: Text('Select category',
@@ -349,7 +349,7 @@ class _TransactionFormScreenState extends State<TransactionFormScreen> {
               title: Text('Recurring Transaction', style: AppDesign.titleMedium),
               subtitle: Text('e.g., Loan EMI, subscriptions', style: AppDesign.bodySmall.copyWith(color: AppDesign.subtle)),
               value: _isRecurring,
-              activeColor: AppDesign.primary,
+              activeThumbColor: AppDesign.primary,
               onChanged: (val) => setState(() => _isRecurring = val),
             ),
             const SizedBox(height: AppDesign.s16),
@@ -425,7 +425,7 @@ class _TypeButton extends StatelessWidget {
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
           margin: const EdgeInsets.all(4),
-          padding: EdgeInsets.symmetric(vertical: 8),
+          padding: const EdgeInsets.symmetric(vertical: 8),
           decoration: BoxDecoration(
             color: isSelected ? color.withOpacity(0.15) : Colors.transparent,
             borderRadius: AppDesign.roundMedium,

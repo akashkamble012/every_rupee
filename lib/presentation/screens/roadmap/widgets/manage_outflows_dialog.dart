@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../../core/di/injection.dart';
@@ -102,7 +101,7 @@ class _ManageOutflowsDialogState extends State<ManageOutflowsDialog> {
   Widget build(BuildContext context) {
     return Dialog(
       backgroundColor: AppDesign.surface,
-      shape: RoundedRectangleBorder(borderRadius: AppDesign.roundLarge),
+      shape: const RoundedRectangleBorder(borderRadius: AppDesign.roundLarge),
       child: Padding(
         padding: const EdgeInsets.all(AppDesign.s24),
         child: Column(
@@ -195,7 +194,7 @@ class _ManageOutflowsDialogState extends State<ManageOutflowsDialog> {
   Widget _buildForm() {
     return Container(
       padding: const EdgeInsets.all(AppDesign.s16),
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: AppDesign.surfaceHigh,
         borderRadius: AppDesign.roundMedium,
       ),

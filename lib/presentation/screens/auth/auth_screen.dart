@@ -6,7 +6,6 @@ import 'package:zb_budget/core/router/app_router.dart';
 import 'package:zb_budget/core/utils/app_logger.dart';
 
 import '../../../core/constants/app_assets.dart';
-import '../../../core/di/injection.dart';
 import '../../../core/theme/app_design.dart';
 import '../../blocs/auth/auth_bloc.dart';
 

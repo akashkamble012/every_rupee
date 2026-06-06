@@ -559,7 +559,7 @@ class MonthlyActionPlanCard extends StatelessWidget {
             hintStyle: AppDesign.bodyMedium.copyWith(color: AppDesign.subtle),
             filled: true,
             fillColor: AppDesign.background,
-            border: OutlineInputBorder(
+            border: const OutlineInputBorder(
               borderRadius: AppDesign.roundMedium,
               borderSide: BorderSide.none,
             ),
@@ -577,7 +577,7 @@ class MonthlyActionPlanCard extends StatelessWidget {
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: AppDesign.primary,
-              shape: RoundedRectangleBorder(borderRadius: AppDesign.roundMedium),
+              shape: const RoundedRectangleBorder(borderRadius: AppDesign.roundMedium),
             ),
             child: const Text('Save', style: TextStyle(color: Colors.black)),
           ),

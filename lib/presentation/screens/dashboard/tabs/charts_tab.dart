@@ -6,7 +6,6 @@ import '../../../../core/theme/app_design.dart';
 import '../../../../domain/entities/entities.dart';
 import '../../../blocs/dashboard/dashboard_bloc.dart';
 import '../../../blocs/insights/insights_bloc.dart';
-import '../../../widgets/charts/dashboard_charts.dart';
 import '../../../widgets/charts/insights_charts.dart';
 
 class DashboardChartsTab extends StatelessWidget {
@@ -185,7 +184,7 @@ class _ChartsTabBody extends StatelessWidget {
                   Container(
                     width: 32,
                     height: 32,
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       color: AppDesign.surfaceHigh,
                       borderRadius: AppDesign.roundSmall,
                     ),

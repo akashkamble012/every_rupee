@@ -100,7 +100,7 @@ class FirestoreSyncService {
       final remoteModified =
           (d['lastModifiedAt'] as Timestamp?)?.toDate() ?? DateTime(2000);
       final existing =
-          await db.isarTransactions.getByIndex('id', [doc.id]);
+          await db.isarTransactions.filter().idEqualTo(doc.id).findFirst();
       if (existing == null ||
           remoteModified.isAfter(existing.lastModifiedAt)) {
         final model = IsarTransaction()
@@ -127,7 +127,7 @@ class FirestoreSyncService {
       final remoteModified =
           (d['lastModifiedAt'] as Timestamp?)?.toDate() ?? DateTime(2000);
       final existing =
-          await db.isarBudgetCategorys.getByIndex('id', [doc.id]);
+          await db.isarBudgetCategorys.filter().idEqualTo(doc.id).findFirst();
       if (existing == null ||
           remoteModified.isAfter(existing.lastModifiedAt)) {
         final model = IsarBudgetCategory()
@@ -152,7 +152,7 @@ class FirestoreSyncService {
       final remoteModified =
           (d['lastModifiedAt'] as Timestamp?)?.toDate() ?? DateTime(2000);
       final existing =
-          await db.isarIncomeSources.getByIndex('id', [doc.id]);
+          await db.isarIncomeSources.filter().idEqualTo(doc.id).findFirst();
       if (existing == null ||
           remoteModified.isAfter(existing.lastModifiedAt)) {
         final model = IsarIncomeSource()
@@ -176,7 +176,7 @@ class FirestoreSyncService {
       final remoteModified =
           (d['lastModifiedAt'] as Timestamp?)?.toDate() ?? DateTime(2000);
       final existing =
-          await db.isarTemporaryOutflows.getByIndex('id', [doc.id]);
+          await db.isarTemporaryOutflows.filter().idEqualTo(doc.id).findFirst();
       if (existing == null ||
           remoteModified.isAfter(existing.lastModifiedAt)) {
         final model = IsarTemporaryOutflow()
@@ -198,7 +198,7 @@ class FirestoreSyncService {
       final remoteModified =
           (d['lastModifiedAt'] as Timestamp?)?.toDate() ?? DateTime(2000);
       final existing =
-          await db.isarRoadmapMonths.getByIndex('id', [doc.id]);
+          await db.isarRoadmapMonths.filter().idEqualTo(doc.id).findFirst();
       if (existing == null ||
           remoteModified.isAfter(existing.lastModifiedAt)) {
         final model = IsarRoadmapMonth()
@@ -223,7 +223,7 @@ class FirestoreSyncService {
     final db = _isarProvider.db;
     switch (collection) {
       case 'transactions':
-        final t = await db.isarTransactions.getByIndex('id', [id]);
+        final t = await db.isarTransactions.filter().idEqualTo(id).findFirst();
         if (t == null) return null;
         return {
           'id': t.id,
@@ -239,7 +239,7 @@ class FirestoreSyncService {
           'lastModifiedAt': Timestamp.fromDate(t.lastModifiedAt),
         };
       case 'categories':
-        final c = await db.isarBudgetCategorys.getByIndex('id', [id]);
+        final c = await db.isarBudgetCategorys.filter().idEqualTo(id).findFirst();
         if (c == null) return null;
         return {
           'id': c.id,
@@ -253,7 +253,7 @@ class FirestoreSyncService {
           'lastModifiedAt': Timestamp.fromDate(c.lastModifiedAt),
         };
       case 'incomeSources':
-        final s = await db.isarIncomeSources.getByIndex('id', [id]);
+        final s = await db.isarIncomeSources.filter().idEqualTo(id).findFirst();
         if (s == null) return null;
         return {
           'id': s.id,
@@ -267,7 +267,7 @@ class FirestoreSyncService {
           'lastModifiedAt': Timestamp.fromDate(s.lastModifiedAt),
         };
       case 'temporaryOutflows':
-        final o = await db.isarTemporaryOutflows.getByIndex('id', [id]);
+        final o = await db.isarTemporaryOutflows.filter().idEqualTo(id).findFirst();
         if (o == null) return null;
         return {
           'id': o.id,
@@ -279,7 +279,7 @@ class FirestoreSyncService {
           'lastModifiedAt': Timestamp.fromDate(o.lastModifiedAt),
         };
       case 'roadmapMonths':
-        final r = await db.isarRoadmapMonths.getByIndex('id', [id]);
+        final r = await db.isarRoadmapMonths.filter().idEqualTo(id).findFirst();
         if (r == null) return null;
         return {
           'id': r.id,

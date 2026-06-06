@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:zb_budget/core/utils/app_logger.dart';
 
 import '../../../core/theme/app_design.dart';
 import '../../blocs/auth/auth_bloc.dart';

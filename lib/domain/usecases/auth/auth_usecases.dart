@@ -1,6 +1,5 @@
 import 'package:injectable/injectable.dart';
 
-import '../../../core/error/app_error.dart';
 import '../../../data/datasources/local/isar_provider.dart';
 import '../../entities/entities.dart';
 import '../../repositories/repositories.dart';

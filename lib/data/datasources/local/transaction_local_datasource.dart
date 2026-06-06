@@ -81,7 +81,7 @@ class TransactionLocalDataSource {
       }
 
       return Ok(entities);
-    } catch (e, st) {
+    } catch (e) {
       return Err(AppError.database(
           message: 'Failed to fetch transactions', original: e));
     }
@@ -89,7 +89,7 @@ class TransactionLocalDataSource {
 
   Future<Result<TransactionEntity?>> getById(String id) async {
     try {
-      final model = await _db.db.isarTransactions.getByIndex('id', [id]);
+      final model = await _db.db.isarTransactions.filter().idEqualTo(id).findFirst();
       if (model == null || model.isDeleted) return const Ok(null);
       return Ok(_toEntity(model));
     } catch (e) {

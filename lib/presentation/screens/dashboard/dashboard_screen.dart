@@ -1,14 +1,8 @@
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../core/di/injection.dart';
-import '../../../core/router/app_router.dart';
 import '../../../core/theme/app_design.dart';
-import '../../../core/utils/formatters.dart';
-import '../../../domain/entities/entities.dart';
 import '../../blocs/dashboard/dashboard_bloc.dart';
 import '../../blocs/insights/insights_bloc.dart';
 import '../../blocs/roadmap/roadmap_bloc.dart';
