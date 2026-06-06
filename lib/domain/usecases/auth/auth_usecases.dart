@@ -1,6 +1,7 @@
 import 'package:injectable/injectable.dart';
 
 import '../../../core/error/app_error.dart';
+import '../../../data/datasources/local/isar_provider.dart';
 import '../../entities/entities.dart';
 import '../../repositories/repositories.dart';
 
@@ -44,8 +45,12 @@ class SignInWithGoogleUseCase {
 @injectable
 class SignOutUseCase {
   final AuthRepository _repository;
-  SignOutUseCase(this._repository);
-  Future<Result<void>> call() => _repository.signOut();
+  final IsarProvider _isarProvider;
+  SignOutUseCase(this._repository, this._isarProvider);
+  Future<Result<void>> call() async {
+    await _isarProvider.clearDb();
+    return _repository.signOut();
+  }
 }
 
 @injectable

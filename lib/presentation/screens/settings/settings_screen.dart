@@ -100,6 +100,30 @@ class _SettingsScreenState extends State<SettingsScreen> {
       );
     }
   }
+  void _confirmSignOut() {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: AppDesign.surface,
+        title: Text('Sign Out', style: AppDesign.headlineMedium),
+     content: Text('Are you sure you want to sign out? Your local data will be cleared from this device.', style: AppDesign.bodyMedium),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('Cancel', style: TextStyle(color: AppDesign.subtle)),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(backgroundColor: AppDesign.error),
+            onPressed: () {
+              Navigator.pop(ctx);
+              context.read<AuthBloc>().add(const AuthEvent.signOut());
+            },
+            child: const Text('Sign Out', style: TextStyle(color: Colors.white)),
+          ),
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -168,9 +192,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   icon: Icons.logout_rounded,
                   label: 'Sign Out',
                   color: AppDesign.error,
-                  onTap: () => context
-                      .read<AuthBloc>()
-                      .add(const AuthEvent.signOut()),
+                  onTap: _confirmSignOut,
                 ),
               ]),
               _Section(title: 'Data', children: [

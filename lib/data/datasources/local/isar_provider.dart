@@ -39,6 +39,15 @@ class IsarProvider {
     AppLogger.i('Isar opened at ${dir.path}');
   }
 
+  Future<void> clearDb() async {
+    if (_isar != null && _isar!.isOpen) {
+      await _isar!.writeTxn(() async {
+        await _isar!.clear();
+      });
+      AppLogger.i('Isar database cleared');
+    }
+  }
+
   Future<void> close() async {
     await _isar?.close();
     _isar = null;

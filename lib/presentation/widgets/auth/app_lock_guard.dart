@@ -4,6 +4,7 @@ import 'package:local_auth/local_auth.dart';
 
 import '../../../core/di/injection.dart';
 import '../../../core/theme/app_design.dart';
+import '../../../domain/repositories/repositories.dart';
 import '../../blocs/auth/auth_bloc.dart';
 
 class AppLockGuard extends StatefulWidget {
@@ -17,6 +18,7 @@ class AppLockGuard extends StatefulWidget {
 class _AppLockGuardState extends State<AppLockGuard> {
   bool _isUnlocked = false;
   bool _isAuthenticating = false;
+  bool _wasUnauthenticated = false;
 
   @override
   void initState() {
@@ -31,6 +33,9 @@ class _AppLockGuardState extends State<AppLockGuard> {
     if (user != null && user.isAppLockEnabled) {
       _authenticate();
     } else {
+      if (state.maybeWhen(unauthenticated: () => true, orElse: () => false)) {
+        _wasUnauthenticated = true;
+      }
       setState(() {
         _isUnlocked = true;
       });
@@ -77,12 +82,63 @@ class _AppLockGuardState extends State<AppLockGuard> {
     }
   }
 
+  Future<void> _promptEnableAppLock(String uid) async {
+    final localAuth = getIt<LocalAuthentication>();
+    final canAuthenticate = await localAuth.canCheckBiometrics || await localAuth.isDeviceSupported();
+    
+    if (!canAuthenticate || !mounted) {
+      setState(() {
+        _isUnlocked = true;
+      });
+      return;
+    }
+
+    final shouldEnable = await showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: AppDesign.surface,
+        title: Text('Enable App Lock?', style: AppDesign.headlineMedium),
+        content: Text('Would you like to use fingerprint or face unlock to secure your Every Rupee data?', style: AppDesign.bodyMedium),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text('Not Now', style: TextStyle(color: AppDesign.subtle)),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(backgroundColor: AppDesign.primary),
+            onPressed: () => Navigator.pop(ctx, true),
+            child: const Text('Enable'),
+          ),
+        ],
+      ),
+    );
+
+    if (shouldEnable == true) {
+      final didAuthenticate = await localAuth.authenticate(
+        localizedReason: 'Please authenticate to enable App Lock',
+        biometricOnly: false,
+      );
+      if (didAuthenticate) {
+        final repo = getIt<AuthRepository>();
+        await repo.updateAppLockStatus(uid, true);
+      }
+    }
+
+    if (mounted) {
+      setState(() {
+        _isUnlocked = true;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
         state.maybeWhen(
           unauthenticated: () {
+            _wasUnauthenticated = true;
             setState(() {
               _isUnlocked = true;
             });
@@ -91,10 +147,16 @@ class _AppLockGuardState extends State<AppLockGuard> {
             if (u.isAppLockEnabled && !_isUnlocked) {
               _authenticate();
             } else if (!u.isAppLockEnabled) {
-              setState(() {
-                _isUnlocked = true;
-              });
+              if (_wasUnauthenticated) {
+                _wasUnauthenticated = false;
+                _promptEnableAppLock(u.uid);
+              } else {
+                setState(() {
+                  _isUnlocked = true;
+                });
+              }
             }
+            _wasUnauthenticated = false;
           },
           orElse: () {},
         );

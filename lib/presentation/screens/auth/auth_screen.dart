@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:zb_budget/core/router/app_router.dart';
@@ -54,6 +55,7 @@ class __BodyState extends State<__Body> with SingleTickerProviderStateMixin {
   }
 
   void _submit(AuthBloc bloc) {
+    FocusScope.of(context).unfocus();
     final email = _emailCtrl.text.trim();
     final password = _passwordCtrl.text;
     if (_tab.index == 0) {
@@ -164,6 +166,7 @@ class __BodyState extends State<__Body> with SingleTickerProviderStateMixin {
                   TextField(
                     controller: _emailCtrl,
                     keyboardType: TextInputType.emailAddress,
+                    textInputAction: TextInputAction.next,
                     style: AppDesign.bodyMedium
                         .copyWith(color: AppDesign.onBackground),
                     decoration: const InputDecoration(
@@ -171,6 +174,9 @@ class __BodyState extends State<__Body> with SingleTickerProviderStateMixin {
                       prefixIcon: Icon(Icons.mail_outline_rounded,
                           color: AppDesign.subtle),
                     ),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.deny(RegExp(r'\s')),
+                    ],
                   ),
                   const SizedBox(height: AppDesign.s12),
                   TextField(
