@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "711111911218",
+    "project_id": "every-rupee",
+    "storage_bucket": "every-rupee.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:711111911218:android:a853f8fa55c1bb48a4992b",
+        "android_client_info": {
+          "package_name": "com.everyrupee.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "711111911218-alabvfj4a3v9tstb524sn6gkc0e0fl0s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBdCWH247pLPVER3z23x0y_yH2tYof6uH0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "711111911218-alabvfj4a3v9tstb524sn6gkc0e0fl0s.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "711111911218-02k101323bd06ana2q34ihe4a48ki7h3.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.zbBudget"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
