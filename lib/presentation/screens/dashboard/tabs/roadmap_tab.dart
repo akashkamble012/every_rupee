@@ -2,75 +2,65 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
-import 'widgets/manage_outflows_dialog.dart';
-import '../../../core/di/injection.dart';
-import '../../../core/theme/app_design.dart';
-import '../../../domain/entities/entities.dart';
-import '../../blocs/roadmap/roadmap_bloc.dart';
+import '../../../../core/theme/app_design.dart';
+import '../../../../domain/entities/entities.dart';
+import '../../../blocs/roadmap/roadmap_bloc.dart';
+import '../../roadmap/widgets/manage_outflows_dialog.dart';
 
-class RoadmapScreen extends StatefulWidget {
-  const RoadmapScreen({super.key});
-
-  @override
-  State<RoadmapScreen> createState() => _RoadmapScreenState();
-}
-
-class _RoadmapScreenState extends State<RoadmapScreen> {
-  late final RoadmapBloc _bloc;
-
-  @override
-  void initState() {
-    super.initState();
-    _bloc = getIt<RoadmapBloc>();
-    _bloc.add(const RoadmapEvent.load());
-  }
-
-  @override
-  void dispose() {
-    _bloc.close();
-    super.dispose();
-  }
+class DashboardRoadmapTab extends StatelessWidget {
+  const DashboardRoadmapTab({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider.value(
-      value: _bloc,
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text('Roadmap', style: AppDesign.headlineMedium),
-          centerTitle: false,
-          elevation: 0,
-          backgroundColor: AppDesign.background,
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.settings),
-              onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (_) => ManageOutflowsDialog(bloc: _bloc),
-                );
-              },
-            ),
-          ],
-        ),
-        body: BlocBuilder<RoadmapBloc, RoadmapState>(
-          builder: (context, state) {
-            return state.when(
-              initial: () => const Center(child: CircularProgressIndicator()),
-              loading: () => const Center(child: CircularProgressIndicator()),
-              failure: (msg) => Center(
-                  child: Text(msg,
-                      style: const TextStyle(color: AppDesign.error))),
-              loaded: (projectedMonths, temporaryOutflows) {
-                if (projectedMonths.isEmpty) {
-                  return const Center(child: Text('No projections available.'));
-                }
-                return _RoadmapTable(months: projectedMonths);
-              },
+    return BlocBuilder<RoadmapBloc, RoadmapState>(
+      builder: (context, state) {
+        return state.when(
+          initial: () => const Center(child: CircularProgressIndicator()),
+          loading: () => const Center(child: CircularProgressIndicator()),
+          failure: (msg) => Center(
+            child: Text(msg, style: const TextStyle(color: AppDesign.error)),
+          ),
+          loaded: (projectedMonths, temporaryOutflows) {
+            if (projectedMonths.isEmpty) {
+              return const Center(child: Text('No projections available.'));
+            }
+            return Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(AppDesign.s16),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      ElevatedButton.icon(
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (_) => ManageOutflowsDialog(
+                                bloc: context.read<RoadmapBloc>()),
+                          );
+                        },
+                        icon: const Icon(Icons.settings_rounded, size: 18),
+                        label: const Text('Manage Outflows'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppDesign.surfaceHigh,
+                          foregroundColor: AppDesign.primary,
+                          elevation: 0,
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: AppDesign.roundMedium,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: _RoadmapTable(months: projectedMonths),
+                ),
+              ],
             );
           },
-        ),
-      ),
+        );
+      },
     );
   }
 }
@@ -82,7 +72,6 @@ class _RoadmapTable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // We use a custom Row layout to make the first column sticky
     return SingleChildScrollView(
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -95,8 +84,8 @@ class _RoadmapTable extends StatelessWidget {
             horizontalMargin: 16,
             columns: const [
               DataColumn(
-                  label: Text('Month',
-                      style: TextStyle(fontWeight: FontWeight.bold))),
+                label: Text('Month', style: TextStyle(fontWeight: FontWeight.bold)),
+              ),
             ],
             rows: months.map((m) {
               return DataRow(
@@ -119,61 +108,42 @@ class _RoadmapTable extends StatelessWidget {
                 horizontalMargin: 16,
                 columns: const [
                   DataColumn(
-                      label: Text('Net Income',
-                          style: TextStyle(fontWeight: FontWeight.bold))),
+                      label: Text('Net Income', style: TextStyle(fontWeight: FontWeight.bold))),
                   DataColumn(
-                      label: Text('Core Fixed',
-                          style: TextStyle(fontWeight: FontWeight.bold))),
+                      label: Text('Core Fixed', style: TextStyle(fontWeight: FontWeight.bold))),
                   DataColumn(
-                      label: Text('EMIs/Debts',
-                          style: TextStyle(fontWeight: FontWeight.bold))),
+                      label: Text('EMIs/Debts', style: TextStyle(fontWeight: FontWeight.bold))),
                   DataColumn(
-                      label: Text('Total Outflow',
-                          style: TextStyle(fontWeight: FontWeight.bold))),
+                      label: Text('Total Outflow', style: TextStyle(fontWeight: FontWeight.bold))),
                   DataColumn(
-                      label: Text('Surplus',
-                          style: TextStyle(fontWeight: FontWeight.bold))),
+                      label: Text('Surplus', style: TextStyle(fontWeight: FontWeight.bold))),
                   DataColumn(
-                      label: Text('Accumulated',
-                          style: TextStyle(fontWeight: FontWeight.bold))),
+                      label: Text('Accumulated', style: TextStyle(fontWeight: FontWeight.bold))),
                   DataColumn(
-                      label: Text('Action Plan',
-                          style: TextStyle(fontWeight: FontWeight.bold))),
+                      label: Text('Action Plan', style: TextStyle(fontWeight: FontWeight.bold))),
                   DataColumn(
-                      label: Text('',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold))), // Edit button
+                      label: Text('', style: TextStyle(fontWeight: FontWeight.bold))), // Edit button
                 ],
                 rows: months.map((m) {
                   final isIncomeOverridden = m.netIncomeOverride != null;
                   final isFixedOverridden = m.coreFixedExpensesOverride != null;
-                  final hasActionPlan =
-                      m.actionPlan != null && m.actionPlan!.isNotEmpty;
+                  final hasActionPlan = m.actionPlan != null && m.actionPlan!.isNotEmpty;
 
                   return DataRow(
                     cells: [
                       DataCell(Text('₹${m.effectiveIncome.toStringAsFixed(0)}',
                           style: TextStyle(
-                              color: isIncomeOverridden
-                                  ? AppDesign.primary
-                                  : AppDesign.onBackground))),
-                      DataCell(Text(
-                          '₹${m.effectiveFixedExpenses.toStringAsFixed(0)}',
+                              color: isIncomeOverridden ? AppDesign.primary : AppDesign.onBackground))),
+                      DataCell(Text('₹${m.effectiveFixedExpenses.toStringAsFixed(0)}',
                           style: TextStyle(
-                              color: isFixedOverridden
-                                  ? AppDesign.primary
-                                  : AppDesign.onBackground))),
-                      DataCell(
-                          Text('₹${m.temporaryOutflows.toStringAsFixed(0)}')),
+                              color: isFixedOverridden ? AppDesign.primary : AppDesign.onBackground))),
+                      DataCell(Text('₹${m.temporaryOutflows.toStringAsFixed(0)}')),
                       DataCell(Text('₹${m.totalOutflow.toStringAsFixed(0)}',
                           style: const TextStyle(color: AppDesign.error))),
                       DataCell(Text('₹${m.surplus.toStringAsFixed(0)}',
                           style: const TextStyle(color: AppDesign.success))),
-                      DataCell(Text(
-                          '₹${m.accumulatedWealth.toStringAsFixed(0)}',
-                          style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: AppDesign.primary))),
+                      DataCell(Text('₹${m.accumulatedWealth.toStringAsFixed(0)}',
+                          style: const TextStyle(fontWeight: FontWeight.bold, color: AppDesign.primary))),
                       DataCell(
                         Container(
                           constraints: const BoxConstraints(maxWidth: 200),
@@ -181,19 +151,14 @@ class _RoadmapTable extends StatelessWidget {
                             m.actionPlan ?? '-',
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
-                                color: hasActionPlan
-                                    ? AppDesign.onBackground
-                                    : AppDesign.subtle,
-                                fontStyle: hasActionPlan
-                                    ? FontStyle.normal
-                                    : FontStyle.italic),
+                                color: hasActionPlan ? AppDesign.onBackground : AppDesign.subtle,
+                                fontStyle: hasActionPlan ? FontStyle.normal : FontStyle.italic),
                           ),
                         ),
                       ),
                       DataCell(
                         IconButton(
-                          icon: const Icon(Icons.edit,
-                              size: 20, color: AppDesign.subtle),
+                          icon: const Icon(Icons.edit, size: 20, color: AppDesign.subtle),
                           onPressed: () {
                             _showEditDialog(context, m);
                           },
@@ -211,12 +176,9 @@ class _RoadmapTable extends StatelessWidget {
   }
 
   void _showEditDialog(BuildContext context, RoadmapDisplayEntity month) {
-    final netIncomeController =
-        TextEditingController(text: month.netIncomeOverride?.toString() ?? '');
-    final fixedExpensesController = TextEditingController(
-        text: month.coreFixedExpensesOverride?.toString() ?? '');
-    final actionPlanController =
-        TextEditingController(text: month.actionPlan ?? '');
+    final netIncomeController = TextEditingController(text: month.netIncomeOverride?.toString() ?? '');
+    final fixedExpensesController = TextEditingController(text: month.coreFixedExpensesOverride?.toString() ?? '');
+    final actionPlanController = TextEditingController(text: month.actionPlan ?? '');
 
     showDialog(
       context: context,
@@ -234,23 +196,19 @@ class _RoadmapTable extends StatelessWidget {
                 const SizedBox(height: 16),
                 TextField(
                   controller: netIncomeController,
-                  decoration: const InputDecoration(
-                      labelText: 'Net Income Override', prefixText: '₹'),
+                  decoration: const InputDecoration(labelText: 'Net Income Override', prefixText: '₹'),
                   keyboardType: TextInputType.number,
                 ),
                 const SizedBox(height: 16),
                 TextField(
                   controller: fixedExpensesController,
-                  decoration: const InputDecoration(
-                      labelText: 'Core Fixed Expenses Override',
-                      prefixText: '₹'),
+                  decoration: const InputDecoration(labelText: 'Core Fixed Expenses Override', prefixText: '₹'),
                   keyboardType: TextInputType.number,
                 ),
                 const SizedBox(height: 16),
                 TextField(
                   controller: actionPlanController,
-                  decoration: const InputDecoration(
-                      labelText: 'Action Plan / Milestone'),
+                  decoration: const InputDecoration(labelText: 'Action Plan / Milestone'),
                   maxLines: 3,
                 ),
               ],

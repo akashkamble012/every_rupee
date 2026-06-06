@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:zb_budget/core/utils/app_logger.dart';
 
-import '../../../core/di/injection.dart';
-import '../../../core/router/app_router.dart';
 import '../../../core/theme/app_design.dart';
-import '../../../domain/repositories/repositories.dart';
 import '../../blocs/auth/auth_bloc.dart';
 
 class OnboardingScreen extends StatefulWidget {
@@ -57,8 +53,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           duration: const Duration(milliseconds: 350), curve: Curves.easeInOut);
     } else {
       // Mark onboarding complete and proceed
-      final authState = context.read<AuthBloc>().state;
-
       context.read<AuthBloc>().add(const AuthEvent.markOnboardingComplete());
     }
   }

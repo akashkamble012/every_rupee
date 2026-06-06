@@ -5,10 +5,8 @@ import 'package:injectable/injectable.dart';
 import '../../presentation/blocs/auth/auth_bloc.dart';
 import '../../presentation/screens/auth/auth_screen.dart';
 import '../../presentation/screens/onboarding/onboarding_screen.dart';
-import '../../presentation/screens/roadmap/roadmap_screen.dart';
 import '../../presentation/screens/onboarding/budget_setup_screen.dart';
 import '../../presentation/screens/dashboard/dashboard_screen.dart';
-import '../../presentation/screens/insights/insights_screen.dart';
 import '../../presentation/screens/ledger/ledger_screen.dart';
 import '../../presentation/screens/budget_manager/budget_manager_screen.dart';
 import '../../presentation/screens/settings/settings_screen.dart';
@@ -23,8 +21,6 @@ abstract class AppRoutes {
   static const String budgetSetup = '/budget-setup';
   static const String shell = '/';
   static const String dashboard = '/dashboard';
-  static const String insights = '/insights';
-  static const String roadmap = '/roadmap';
   static const String ledger = '/ledger';
   static const String budgetManager = '/caps';
   static const String settings = '/settings';
@@ -102,14 +98,6 @@ class AppRouter {
           GoRoute(
             path: AppRoutes.dashboard,
             builder: (_, __) => const DashboardScreen(),
-          ),
-          GoRoute(
-            path: AppRoutes.insights,
-            builder: (_, __) => const InsightsScreen(),
-          ),
-          GoRoute(
-            path: AppRoutes.roadmap,
-            builder: (_, __) => const RoadmapScreen(),
           ),
           GoRoute(
             path: AppRoutes.ledger,

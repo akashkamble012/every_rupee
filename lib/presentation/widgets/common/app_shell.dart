@@ -10,8 +10,6 @@ class AppShell extends StatelessWidget {
 
   static const _tabs = [
     AppRoutes.dashboard,
-    AppRoutes.insights,
-    AppRoutes.roadmap,
     AppRoutes.ledger,
     AppRoutes.budgetManager,
     AppRoutes.settings,
@@ -41,7 +39,7 @@ class AppShell extends StatelessWidget {
   }
 
   bool _shouldShowFAB(String location) =>
-      location == AppRoutes.dashboard || location == AppRoutes.ledger || location == AppRoutes.insights;
+      location == AppRoutes.dashboard || location == AppRoutes.ledger;
 }
 
 class _AppBottomNav extends StatelessWidget {
@@ -74,18 +72,6 @@ class _AppBottomNav extends StatelessWidget {
               selectedIcon:
                   Icon(Icons.dashboard_rounded, color: AppDesign.primary),
               label: 'Dashboard',
-            ),
-            NavigationDestination(
-              icon: Icon(Icons.insights_outlined),
-              selectedIcon: Icon(Icons.insights_rounded,
-                  color: AppDesign.primary),
-              label: 'Insights',
-            ),
-            NavigationDestination(
-              icon: Icon(Icons.map_outlined),
-              selectedIcon: Icon(Icons.map_rounded,
-                  color: AppDesign.primary),
-              label: 'Roadmap',
             ),
             NavigationDestination(
               icon: Icon(Icons.receipt_long_outlined),
