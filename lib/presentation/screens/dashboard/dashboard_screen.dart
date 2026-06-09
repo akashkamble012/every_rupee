@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:zb_budget/utils/mock_data_importer.dart';
 
 import '../../../core/di/injection.dart';
 import '../../../core/theme/app_design.dart';
@@ -27,9 +28,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
     super.initState();
     final now = DateTime.now();
     final currentMonth = DateTime(now.year, now.month, 1);
-    
-    _dashboardBloc = getIt<DashboardBloc>()..add(DashboardEvent.load(currentMonth));
-    _insightsBloc = getIt<InsightsBloc>()..add(InsightsEvent.load(currentMonth));
+
+    _dashboardBloc = getIt<DashboardBloc>()
+      ..add(DashboardEvent.load(currentMonth));
+    _insightsBloc = getIt<InsightsBloc>()
+      ..add(InsightsEvent.load(currentMonth));
     _roadmapBloc = getIt<RoadmapBloc>()..add(const RoadmapEvent.load());
   }
 
@@ -54,7 +57,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         child: Scaffold(
           backgroundColor: AppDesign.background,
           appBar: AppBar(
-            title: Text('Dashboard', style: AppDesign.headlineMedium),
+            title: Text('Every Rupee', style: AppDesign.headlineMedium),
             centerTitle: false,
             elevation: 0,
             backgroundColor: AppDesign.background,
@@ -69,6 +72,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 Tab(text: 'Roadmap'),
               ],
             ),
+            actions: [
+              IconButton(
+                  onPressed: () async {
+                    // Import user's specific data request
+                    await importMockData();
+                  },
+                  icon: const Icon(Icons.upload))
+            ],
           ),
           body: const SafeArea(
             child: TabBarView(
@@ -95,11 +106,24 @@ class _OverviewBuilder extends StatelessWidget {
         final bloc = context.read<DashboardBloc>();
 
         return state.when(
-          initial: () => const Center(child: CircularProgressIndicator(color: AppDesign.primary)),
-          loading: () => const Center(child: CircularProgressIndicator(color: AppDesign.primary)),
-          failure: (message) => Center(child: Text(message, style: AppDesign.bodyMedium.copyWith(color: AppDesign.error))),
-          loaded: (month, surplus, variances, recentTransactions, pendingTransactions,
-                  wealthHistory, historicalVariances, sortPreference, txSortPref, visibleCharts) =>
+          initial: () => const Center(
+              child: CircularProgressIndicator(color: AppDesign.primary)),
+          loading: () => const Center(
+              child: CircularProgressIndicator(color: AppDesign.primary)),
+          failure: (message) => Center(
+              child: Text(message,
+                  style:
+                      AppDesign.bodyMedium.copyWith(color: AppDesign.error))),
+          loaded: (month,
+                  surplus,
+                  variances,
+                  recentTransactions,
+                  pendingTransactions,
+                  wealthHistory,
+                  historicalVariances,
+                  sortPreference,
+                  txSortPref,
+                  visibleCharts) =>
               DashboardOverviewTab(
             month: month,
             surplus: surplus,
@@ -116,4 +140,3 @@ class _OverviewBuilder extends StatelessWidget {
     );
   }
 }
-

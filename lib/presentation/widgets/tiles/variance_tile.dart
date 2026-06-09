@@ -58,9 +58,7 @@ class VarianceTile extends StatelessWidget {
                       text: TextSpan(
                         children: [
                           TextSpan(
-                            text: formatINR(variance.remaining < 0
-                                ? 0
-                                : variance.remaining),
+                            text: formatINR(variance.remaining),
                             style: AppDesign.amountSmall.copyWith(color: color),
                           ),
                           TextSpan(

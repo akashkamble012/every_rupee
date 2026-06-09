@@ -10,6 +10,7 @@ import 'data/datasources/remote/firestore_sync_service.dart';
 import 'domain/repositories/repositories.dart';
 import 'core/providers/app_providers.dart';
 import 'presentation/widgets/auth/app_lock_guard.dart';
+
 /// Called from main(). Initialises Firebase, Isar, DI, SMS listener, and
 /// then mounts the root Flutter widget.
 Future<void> bootstrap() async {
