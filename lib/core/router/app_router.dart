@@ -35,6 +35,8 @@ class AppRouter {
 
   AppRouter(this._authBloc);
 
+  static String? pendingDeepLink;
+
   late final GoRouter router = GoRouter(
     initialLocation: AppRoutes.dashboard,
     refreshListenable: _GoRouterRefreshBloc(_authBloc.stream),
@@ -53,7 +55,7 @@ class AppRouter {
           if (isAuthRoute) {
             if (!user.onboardingComplete) return AppRoutes.onboarding;
             if (!user.budgetSetupComplete) return AppRoutes.budgetSetup;
-            return AppRoutes.dashboard;
+            return pendingDeepLink ?? AppRoutes.dashboard;
           }
           if (!user.onboardingComplete && !isOnboardingRoute) {
             return AppRoutes.onboarding;
@@ -63,6 +65,15 @@ class AppRouter {
               !isBudgetSetupRoute) {
             return AppRoutes.budgetSetup;
           }
+          
+          if (user.onboardingComplete && user.budgetSetupComplete) {
+            if (pendingDeepLink != null) {
+              final link = pendingDeepLink;
+              pendingDeepLink = null;
+              return link;
+            }
+          }
+
           if (user.onboardingComplete &&
               user.budgetSetupComplete &&
               (isAuthRoute || isOnboardingRoute || isBudgetSetupRoute)) {

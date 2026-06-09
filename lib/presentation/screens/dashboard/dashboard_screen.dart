@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:zb_budget/utils/mock_data_importer.dart';
+
+import '../../../core/router/app_router.dart';
 
 import '../../../core/di/injection.dart';
 import '../../../core/theme/app_design.dart';
@@ -34,6 +37,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
     _insightsBloc = getIt<InsightsBloc>()
       ..add(InsightsEvent.load(currentMonth));
     _roadmapBloc = getIt<RoadmapBloc>()..add(const RoadmapEvent.load());
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (AppRouter.pendingDeepLink != null) {
+        final link = AppRouter.pendingDeepLink!;
+        AppRouter.pendingDeepLink = null;
+        if (mounted) {
+          context.push(link);
+        }
+      }
+    });
   }
 
   @override

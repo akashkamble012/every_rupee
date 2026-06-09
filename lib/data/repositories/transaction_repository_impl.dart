@@ -3,6 +3,7 @@ import 'package:injectable/injectable.dart';
 import '../../domain/entities/entities.dart';
 import '../../domain/repositories/repositories.dart';
 import '../datasources/local/transaction_local_datasource.dart';
+import '../../core/services/home_widget_service.dart';
 
 @Injectable(as: TransactionRepository)
 class TransactionRepositoryImpl implements TransactionRepository {
@@ -40,12 +41,31 @@ class TransactionRepositoryImpl implements TransactionRepository {
       );
 
   @override
-  Future<Result<TransactionEntity>> saveTransaction(TransactionEntity tx) =>
-      _local.save(tx);
+  Future<Result<TransactionEntity>> saveTransaction(TransactionEntity tx) async {
+    final result = await _local.save(tx);
+    if (result.isOk) {
+      _updateWidgetData();
+    }
+    return result;
+  }
 
   @override
-  Future<Result<void>> softDeleteTransaction(String id) =>
-      _local.softDelete(id);
+  Future<Result<void>> softDeleteTransaction(String id) async {
+    final result = await _local.softDelete(id);
+    if (result.isOk) {
+      _updateWidgetData();
+    }
+    return result;
+  }
+
+  Future<void> _updateWidgetData() async {
+    final result = await getTransactionsPaged(offset: 0, limit: 5);
+    if (result.isOk) {
+      final transactions = List<TransactionEntity>.from(result.value);
+      transactions.sort((a, b) => b.date.compareTo(a.date));
+      await HomeWidgetService.updateRecentTransactions(transactions.take(5).toList());
+    }
+  }
 
   @override
   Future<Result<TransactionEntity?>> getTransactionById(String id) =>
